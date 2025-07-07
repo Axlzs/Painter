@@ -1,0 +1,13 @@
+# Ignore build output
+painter
+*.o
+
+# Editor files
+*.swp
+*~
+
+# VS Code settings (optional)
+.vscode/
+
+# Logs, temp files
+*.log
