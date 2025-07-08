@@ -30,6 +30,18 @@ class Button{
             mouseY>=button.y &&
             mouseY<button.h);
     }
+
+    void render(SDL_Renderer* renderer) const {
+        SDL_FRect dstRect = getFRect();
+        if (iconTexture) {
+            SDL_RenderTexture(renderer, iconTexture, NULL, &dstRect);
+        } else {
+            // Draw a colored rectangle as fallback
+            SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+            SDL_RenderFillRect(renderer, &button);
+        }
+    }
+
 };
 
 int main() {
@@ -122,10 +134,10 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
-
+        //buttons
         SDL_RenderTexture(renderer,iconTexture, NULL, &dstRect);
         SDL_RenderTexture(renderer,iconTexture1, NULL, &dstRect1);
-
+        //buttons
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~60 FPS
     }
