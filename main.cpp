@@ -5,7 +5,8 @@
 
 class Button{
     public:
-    SDL_Rect button;
+    SDL_FRect button;
+    SDL_Texture* iconTexture = nullptr;
     bool inside = false;
     
     Button(int x,int y,int width,int height){
@@ -31,7 +32,7 @@ class Button{
             mouseY<button.h);
     }
 
-    void render(SDL_Renderer* renderer) const {
+    void render(SDL_Renderer *renderer) const {
         SDL_FRect dstRect = getFRect();
         if (iconTexture) {
             SDL_RenderTexture(renderer, iconTexture, NULL, &dstRect);
@@ -41,7 +42,6 @@ class Button{
             SDL_RenderFillRect(renderer, &button);
         }
     }
-
 };
 
 int main() {
@@ -50,18 +50,9 @@ int main() {
     SDL_Texture *texture;
     SDL_Event event;
 
-    SDL_Surface *iconSurface;
-    SDL_Surface *iconSurface1;
-    SDL_Texture *iconTexture;
-    SDL_Texture *iconTexture1;
-
     int prev_x = -1, prev_y = -1;
     bool drawing = false;
     bool running = true;
-    Button eraseButton(0,0,50,50);
-    Button drawButton(50,0,50,50);
-    SDL_FRect dstRect = eraseButton.getFRect();
-    SDL_FRect dstRect1 = drawButton.getFRect();
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
@@ -72,32 +63,8 @@ int main() {
     renderer = SDL_CreateRenderer(window, NULL);
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, 
                                SDL_TEXTUREACCESS_TARGET, 1024, 768);
-    ////////////////////////////////////////////////////////////////
 
-    iconSurface = SDL_LoadBMP("icons/erase_icon.bmp");
-    if(!iconSurface) {
-        std::cout<<"no surface"<<SDL_GetError()<<std::endl;
-        return 1;
-    }
-    iconSurface1 = SDL_LoadBMP("icons/draw_icon.bmp");
-    if(!iconSurface1) {
-        std::cout<<"no surface"<<SDL_GetError()<<std::endl;
-        return 1;
-    }
-
-    iconTexture = SDL_CreateTextureFromSurface(renderer, iconSurface);
-    if (!iconTexture) {
-        std::cout<<"no texture: "<<SDL_GetError()<<std::endl;
-        return 2;
-    }
-    iconTexture1 = SDL_CreateTextureFromSurface(renderer, iconSurface1);
-    if (!iconTexture1) {
-        std::cout<<"no texture: "<<SDL_GetError()<<std::endl;
-        return 2;
-    }
-
-    ////////////////////////////////////////////////////////////////
-
+    
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
@@ -134,10 +101,6 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
-        //buttons
-        SDL_RenderTexture(renderer,iconTexture, NULL, &dstRect);
-        SDL_RenderTexture(renderer,iconTexture1, NULL, &dstRect1);
-        //buttons
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~60 FPS
     }
