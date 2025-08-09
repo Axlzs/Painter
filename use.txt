@@ -1,4 +1,0 @@
-make or ctrl+shift+b : build 
-
-./painter : run the app 
-make clean : delete build
