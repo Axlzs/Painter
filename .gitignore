@@ -11,3 +11,9 @@ painter
 
 # Logs, temp files
 *.log
+
+# File with different examples
+examples
+
+# Shows how to compile an run the app
+Use.txt
