@@ -1,3 +1,45 @@
+class Button{
+    public:
+    SDL_FRect button;
+    SDL_Texture* iconTexture = nullptr;
+    bool inside = false;
+    
+    Button(int x,int y,int width,int height){
+        button.x = x;
+        button.y = y;
+        button.w = width;
+        button.h = height;
+    }
+
+    SDL_FRect getFRect() const {
+        SDL_FRect fr;
+        fr.x = static_cast<float>(button.x);
+        fr.y = static_cast<float>(button.y);
+        fr.w = static_cast<float>(button.w);
+        fr.h = static_cast<float>(button.h);
+        return fr;
+    }
+
+    bool mouseOverButton(int mouseX, int mouseY){
+        return (mouseX>=button.x &&
+            mouseX<button.w &&
+            mouseY>=button.y &&
+            mouseY<button.h);
+    }
+
+    void render(SDL_Renderer *renderer) const {
+        SDL_FRect dstRect = getFRect();
+        if (iconTexture) {
+            SDL_RenderTexture(renderer, iconTexture, NULL, &dstRect);
+        } else {
+            // Draw a colored rectangle as fallback
+            SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+            SDL_RenderFillRect(renderer, &button);
+        }
+    }
+};    
+    
+    
     //degining surfaces and textures
     SDL_Surface *iconSurface;
     SDL_Surface *iconSurface1;

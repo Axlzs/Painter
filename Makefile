@@ -2,11 +2,17 @@ CXX = g++
 CXXFLAGS = -std=c++17 `pkg-config --cflags sdl3`
 LDFLAGS = `pkg-config --libs sdl3`
 TARGET = painter
+TARGETDEL = painter.txt
+SOURCES = main.cpp mouse.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(TARGET)
 
-$(TARGET): main.cpp
-	$(CXX) $(CXXFLAGS) main.cpp -o $(TARGET) $(LDFLAGS)
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGETDEL) $(OBJECTS)

@@ -1,0 +1,19 @@
+Menu:
+    [+] menu opens
+    [-] button configs
+    [+] make transparent
+
+Drawing: 
+    [-] eraser
+    [-] pen (squares)
+    [-] marker (circles with antialiasing)
+    [-] change size
+    [-] erase all
+    [-] ctrl+z
+    [-] bucket fill
+
+Screen:
+    [-] change window size
+    [-] change canvas size
+    [-] resize canvas
+    [-] move around canvas

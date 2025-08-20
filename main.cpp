@@ -1,58 +1,13 @@
 #include <SDL3/SDL.h>
 #include <iostream>
-#include <string>
-#include <unistd.h>
-
-class Button{
-    public:
-    SDL_FRect button;
-    SDL_Texture* iconTexture = nullptr;
-    bool inside = false;
-    
-    Button(int x,int y,int width,int height){
-        button.x = x;
-        button.y = y;
-        button.w = width;
-        button.h = height;
-    }
-
-    SDL_FRect getFRect() const {
-        SDL_FRect fr;
-        fr.x = static_cast<float>(button.x);
-        fr.y = static_cast<float>(button.y);
-        fr.w = static_cast<float>(button.w);
-        fr.h = static_cast<float>(button.h);
-        return fr;
-    }
-
-    bool mouseOverButton(int mouseX, int mouseY){
-        return (mouseX>=button.x &&
-            mouseX<button.w &&
-            mouseY>=button.y &&
-            mouseY<button.h);
-    }
-
-    void render(SDL_Renderer *renderer) const {
-        SDL_FRect dstRect = getFRect();
-        if (iconTexture) {
-            SDL_RenderTexture(renderer, iconTexture, NULL, &dstRect);
-        } else {
-            // Draw a colored rectangle as fallback
-            SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-            SDL_RenderFillRect(renderer, &button);
-        }
-    }
-};
+#include "Static_variables.hpp"
+#include "mouse.hpp"
 
 int main() {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
     SDL_Event event;
-
-    int prev_x = -1, prev_y = -1;
-    bool drawing = false;
-    bool running = true;
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
@@ -61,9 +16,7 @@ int main() {
 
     window = SDL_CreateWindow("Drawing App", 1024, 768, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, 
-                               SDL_TEXTUREACCESS_TARGET, 1024, 768);
-
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 1024, 768);
     
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -72,7 +25,7 @@ int main() {
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && 
-                event.button.button == SDL_BUTTON_LEFT) {
+                event.button.button == SDL_BUTTON_LEFT && show_menu == false) {
                 drawing = true;
                 prev_x = event.button.x;
                 prev_y = event.button.y;
@@ -87,22 +40,47 @@ int main() {
                 int x = event.motion.x;
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                if (prev_x >= 0 && prev_y >= 0) {
-                    SDL_RenderLine(renderer, prev_x, prev_y, x, y);
-                }
+
+                DrawBrush(renderer, x, y, brushSize, red, MouseType::CIRCLE);
+
                 prev_x = x;
                 prev_y = y;
             }
+
+            if (event.type == SDL_EVENT_KEY_DOWN) {
+                if (event.key.key == SDLK_TAB) {  // toggle menu
+                    show_menu = !show_menu;
+                }
+                if (event.key.key == SDLK_UP) {  // increase brush size
+                    brushSize++;
+                }
+                if (event.key.key == SDLK_DOWN) {  // increase brush size
+                    brushSize--;
+                }
+
+            }
+
         }
+        
 
         // Render to window
         SDL_SetRenderTarget(renderer, NULL);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
+
+        // Draw menu if active
+        if (show_menu) {
+            SDL_GetWindowSize(window, &windowW, &windowH);
+            SDL_FRect menuRect = {0, 0, (float)windowW, (float)windowH};
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);  // semi-transparent black
+            //SDL_RenderClear(renderer);
+            SDL_RenderFillRect(renderer, &menuRect);
+        }
+
         SDL_RenderPresent(renderer);
-        SDL_Delay(16); // Cap at ~60 FPS
+        SDL_Delay(16); // Cap at ~62 FPS
     }
 
     SDL_DestroyTexture(texture);
