@@ -1,17 +1,18 @@
 Menu:
     [+] menu opens
-    [-] button configs
     [+] make transparent
+    [-] make buttons
+    [-] button configs
 
 Drawing: 
-    [-] eraser
+    [+] brush interpolation
     [+] pen (squares)
-    [-] marker (circles with antialiasing)
     [+] change size
     [+] erase all
+    [+] marker
+    [-] eraser
     [-] ctrl+z
     [-] bucket fill
-    [-] brush interpolation
 
 Screen:
     [-] change window size
