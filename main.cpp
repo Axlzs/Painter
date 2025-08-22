@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Static_variables.hpp"
 #include "mouse.hpp"
+#include "canvas.hpp"
+#include <bits/stdc++.h>
 
 int main() {
     SDL_Window *window;
@@ -14,9 +16,9 @@ int main() {
         return SDL_APP_FAILURE;
     }
 
-    window = SDL_CreateWindow("Drawing App", 1024, 768, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Drawing App", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 1024, 768);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -41,23 +43,32 @@ int main() {
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
 
-                DrawBrush(renderer, x, y, brushSize, red, MouseType::CIRCLE);
-
+                BresenhalmActivate(renderer, prev_x, prev_y, x, y, BRUSHSIZE, RED, brushType);
                 prev_x = x;
                 prev_y = y;
             }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
-                if (event.key.key == SDLK_TAB) {  // toggle menu
+                if (event.key.key == SDLK_TAB) {    // toggle menu
                     show_menu = !show_menu;
                 }
-                if (event.key.key == SDLK_UP) {  // increase brush size
-                    brushSize++;
+                if (event.key.key == SDLK_UP) {     // increase brush size
+                    BRUSHSIZE++;
                 }
-                if (event.key.key == SDLK_DOWN) {  // increase brush size
-                    brushSize--;
+                if (event.key.key == SDLK_DOWN) {   // decrease brush size
+                    if(BRUSHSIZE>0){
+                        BRUSHSIZE--;
+                    }
                 }
-
+                if (event.key.key == SDLK_C) {      // set brush to circle
+                    brushType = MouseType::CIRCLE;
+                }
+                if (event.key.key == SDLK_R) {      // set brush to rect
+                    brushType = MouseType::RECT;
+                }
+                if (event.key.key == SDLK_DELETE) { // delete everything
+                    clearCanvas(renderer, texture);
+                }
             }
 
         }
@@ -71,12 +82,7 @@ int main() {
 
         // Draw menu if active
         if (show_menu) {
-            SDL_GetWindowSize(window, &windowW, &windowH);
-            SDL_FRect menuRect = {0, 0, (float)windowW, (float)windowH};
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);  // semi-transparent black
-            //SDL_RenderClear(renderer);
-            SDL_RenderFillRect(renderer, &menuRect);
+            menuScreen(renderer);
         }
 
         SDL_RenderPresent(renderer);

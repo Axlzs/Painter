@@ -5,12 +5,13 @@ Menu:
 
 Drawing: 
     [-] eraser
-    [-] pen (squares)
+    [+] pen (squares)
     [-] marker (circles with antialiasing)
-    [-] change size
-    [-] erase all
+    [+] change size
+    [+] erase all
     [-] ctrl+z
     [-] bucket fill
+    [-] brush interpolation
 
 Screen:
     [-] change window size

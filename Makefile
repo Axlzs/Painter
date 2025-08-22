@@ -1,9 +1,9 @@
 CXX = g++
-CXXFLAGS = -std=c++17 `pkg-config --cflags sdl3`
+CXXFLAGS = -std=c++20 `pkg-config --cflags sdl3`
 LDFLAGS = `pkg-config --libs sdl3`
 TARGET = painter
 TARGETDEL = painter.txt
-SOURCES = main.cpp mouse.cpp
+SOURCES = main.cpp mouse.cpp canvas.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(TARGET)
