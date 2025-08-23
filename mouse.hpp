@@ -7,7 +7,7 @@ enum class MouseType {
     CIRCLE
 };
 
-extern MouseType brushType;
+extern MouseType BRUSHTYPE;
 
 void DrawBrush(SDL_Renderer *renderer, int x, int y, int size, SDL_Color color, MouseType type);
 void BresenhalmActivate(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, int size, SDL_Color color, MouseType type);

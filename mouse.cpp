@@ -2,7 +2,7 @@
 #include "mouse.hpp"
 
 
-MouseType brushType = MouseType::RECT;
+MouseType BRUSHTYPE = MouseType::RECT;
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
 

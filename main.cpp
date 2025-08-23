@@ -43,7 +43,7 @@ int main() {
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
 
-                BresenhalmActivate(renderer, prev_x, prev_y, x, y, BRUSHSIZE, RED, brushType);
+                BresenhalmActivate(renderer, prev_x, prev_y, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
                 prev_x = x;
                 prev_y = y;
             }
@@ -61,13 +61,21 @@ int main() {
                     }
                 }
                 if (event.key.key == SDLK_C) {      // set brush to circle
-                    brushType = MouseType::CIRCLE;
+                    BRUSHTYPE = MouseType::CIRCLE;
+                    CURRENTCOLOR = BRUSHCOLOR;
+                    CURRENTSIZE = BRUSHSIZE;
                 }
                 if (event.key.key == SDLK_R) {      // set brush to rect
-                    brushType = MouseType::RECT;
+                    BRUSHTYPE = MouseType::RECT;
+                    CURRENTCOLOR = BRUSHCOLOR;
+                    CURRENTSIZE = BRUSHSIZE;
                 }
                 if (event.key.key == SDLK_DELETE) { // delete everything
                     clearCanvas(renderer, texture);
+                }
+                if (event.key.key == SDLK_E) { // delete everything
+                    CURRENTSIZE = BRUSHSIZE*2;
+                    CURRENTCOLOR = GLOBALBACKGROUND;
                 }
             }
 

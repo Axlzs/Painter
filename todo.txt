@@ -10,7 +10,7 @@ Drawing:
     [+] change size
     [+] erase all
     [+] marker
-    [-] eraser
+    [+] eraser
     [-] ctrl+z
     [-] bucket fill
 
