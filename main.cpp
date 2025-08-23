@@ -9,6 +9,7 @@ int main() {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
+    SDL_Texture *outline;
     SDL_Event event;
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -19,6 +20,7 @@ int main() {
     window = SDL_CreateWindow("Drawing App", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
+    outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -46,11 +48,15 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_MOTION && drawing) {
                 int x = event.motion.x;
                 int y = event.motion.y;
-                SDL_SetRenderTarget(renderer, texture);
 
-                BresenhalmActivate(renderer, prev_x, prev_y, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
+                BresenhalmActivate(renderer, texture, prev_x, prev_y, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
                 prev_x = x;
                 prev_y = y;
+            } 
+            if (event.type == SDL_EVENT_MOUSE_MOTION && drawing == false){
+                int x = event.motion.x;
+                int y = event.motion.y;
+                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
             }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
@@ -92,6 +98,7 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
+        SDL_RenderTexture(renderer, outline, NULL, NULL);
 
         // Draw menu if active
         if (show_menu) {
@@ -103,6 +110,7 @@ int main() {
     }
 
     SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(outline);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

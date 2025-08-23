@@ -11,6 +11,8 @@ Drawing:
     [+] erase all
     [+] marker
     [+] eraser
+    [+] make points
+    [-] create blueprint
     [-] ctrl+z
     [-] bucket fill
 
