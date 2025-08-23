@@ -29,6 +29,11 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && 
                 event.button.button == SDL_BUTTON_LEFT && show_menu == false) {
                 drawing = true;
+                int x = event.motion.x;
+                int y = event.motion.y;
+                SDL_SetRenderTarget(renderer, texture);
+
+                DrawBrush(renderer, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
                 prev_x = event.button.x;
                 prev_y = event.button.y;
             }
