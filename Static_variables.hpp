@@ -1,5 +1,6 @@
 #ifndef STATIC_VARIABLES_HPP
 #define STATIC_VARIABLES_HPP
+#pragma once
 
 int WINDOWWIDTH = 1024;
 int WINDOWHEIGHT = 768;
@@ -15,6 +16,10 @@ SDL_Color BRUSHCOLOR = {255, 0, 0, 255};
 SDL_Color CURRENTCOLOR = {255, 0, 0, 255};
 SDL_Color RED = {255, 0, 0, 255};
 SDL_Color GLOBALBACKGROUND = {255, 255, 255, 255};
+
+
+//////////////////////BUTTONS//////////////////////
+
 
 
 #endif

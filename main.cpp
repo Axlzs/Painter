@@ -43,6 +43,9 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && 
                 event.button.button == SDL_BUTTON_LEFT) {
                 drawing = false;
+                int x = event.motion.x;
+                int y = event.motion.y;
+                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION && drawing) {
@@ -50,6 +53,7 @@ int main() {
                 int y = event.motion.y;
 
                 BresenhalmActivate(renderer, texture, prev_x, prev_y, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
+                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
                 prev_x = x;
                 prev_y = y;
             } 
@@ -64,11 +68,12 @@ int main() {
                     show_menu = !show_menu;
                 }
                 if (event.key.key == SDLK_UP) {     // increase brush size
-                    BRUSHSIZE++;
+                    CURRENTSIZE++;
+
                 }
                 if (event.key.key == SDLK_DOWN) {   // decrease brush size
                     if(BRUSHSIZE>0){
-                        BRUSHSIZE--;
+                        CURRENTSIZE--;
                     }
                 }
                 if (event.key.key == SDLK_C) {      // set brush to circle
@@ -85,6 +90,7 @@ int main() {
                     clearCanvas(renderer, texture);
                 }
                 if (event.key.key == SDLK_E) { // delete everything
+                    BRUSHSIZE = CURRENTSIZE;
                     CURRENTSIZE = BRUSHSIZE*2;
                     CURRENTCOLOR = GLOBALBACKGROUND;
                 }

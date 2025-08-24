@@ -1,5 +1,6 @@
+#define _USE_MATH_DEFINES
+
 #include <cmath>
-#include <iostream>
 #include "mouse.hpp"
 
 
@@ -24,7 +25,6 @@ void DrawBrush(SDL_Renderer *renderer, int x, int y, int size, SDL_Color color, 
     }
 }
 void BresenhalmActivate(SDL_Renderer* renderer, SDL_Texture* texture, int x1, int y1, int x2, int y2, int size, SDL_Color color, MouseType type) {
-    std::cout<<"no outline"<<std::endl;
     
     // Distance between points
     int dx = x2 - x1;
@@ -54,10 +54,17 @@ void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int
     SDL_RenderClear(renderer); // immediately overlays the invisible color
     SDL_SetRenderDrawColor(renderer, 0,0,0,180);
     if (type == MouseType::RECT) {
-        std::cout<<"i identify as an outline"<<std::endl;
         SDL_FRect rect = { (float)(x - size/2), (float)(y - size/2), (float)size, (float)size };
         SDL_RenderRect(renderer, &rect); // draws the textrue
+    } else if (type == MouseType::CIRCLE) {
+        for (int dy = -size/2; dy <= size/2; dy++) {
+            for (int dx = -size/2; dx <= size/2; dx++) {
+                if (dx*dx + dy*dy <= (size/2)*(size/2)&& dx*dx + dy*dy >=(size/2-1)*(size/2-1)) {
+                    SDL_RenderPoint(renderer, x + dx, y + dy);
+                }
+            }
+        }
     }
     SDL_SetRenderTarget(renderer, NULL); // deselects this layer 
-
+    
 }

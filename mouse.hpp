@@ -1,6 +1,7 @@
 #ifndef MOUSE_HPP
 #define MOUSE_HPP
 #include <SDL3/SDL.h>
+#pragma once
 
 enum class MouseType {
     RECT,
