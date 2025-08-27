@@ -12,12 +12,20 @@ Drawing:
     [+] marker
     [+] eraser
     [+] make points
-    [-] create blueprint
+    [+] create brush outline 
     [-] ctrl+z
     [-] bucket fill
+    [-] circle brush performace issues
 
 Screen:
     [-] change window size
     [-] change canvas size
     [-] resize canvas
     [-] move around canvas
+
+
+Struct CityRecord{
+    name
+    population
+    lattitude, longitude
+}

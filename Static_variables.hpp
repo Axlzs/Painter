@@ -1,6 +1,5 @@
 #ifndef STATIC_VARIABLES_HPP
 #define STATIC_VARIABLES_HPP
-#pragma once
 
 int WINDOWWIDTH = 1024;
 int WINDOWHEIGHT = 768;

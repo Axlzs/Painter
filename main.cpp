@@ -3,13 +3,16 @@
 #include "Static_variables.hpp"
 #include "mouse.hpp"
 #include "canvas.hpp"
+#include "ui.hpp"
 #include <bits/stdc++.h>
+#include <SDL_image.h>
 
 int main() {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
     SDL_Texture *outline;
+    SDL_Texture *uiElements;
     SDL_Event event;
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -22,6 +25,23 @@ int main() {
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     
+
+    //////////button definitions//////////
+    
+    // Loading sprite sheet
+    SDL_Surface* surface = IMG_Load(Button_location.c_str());
+    if (!surface) {
+        std::cerr << "Failed to load image: " << SDL_GetError() << "\n";
+        return 1;
+    }
+    SDL_Texture* buttonSheetTex = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+
+    // Create a button instance
+    Button resizeButton("resize", 100, 100, buttonSheetTex);
+
+    //////////////////////////////////////
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
@@ -29,7 +49,7 @@ int main() {
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && 
-                event.button.button == SDL_BUTTON_LEFT && show_menu == false) {
+                event.button.button == SDL_BUTTON_LEFT && !show_menu) {
                 drawing = true;
                 int x = event.motion.x;
                 int y = event.motion.y;
@@ -57,11 +77,24 @@ int main() {
                 prev_x = x;
                 prev_y = y;
             } 
-            if (event.type == SDL_EVENT_MOUSE_MOTION && drawing == false){
+            if (event.type == SDL_EVENT_MOUSE_MOTION && !drawing && !show_menu){
                 int x = event.motion.x;
                 int y = event.motion.y;
                 MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
             }
+
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT && show_menu) {
+                int x = event.motion.x;
+                int y = event.motion.y;
+
+                if(resizeButton.mouseOverButton(x,y)) {
+                    std::cout<<"button is pressed :)"<<std::endl;
+                } else {
+                    std::cout<<"button not pressed :("<<std::endl;
+
+                }
+
+                }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
                 if (event.key.key == SDLK_TAB) {    // toggle menu
@@ -109,12 +142,13 @@ int main() {
         // Draw menu if active
         if (show_menu) {
             menuScreen(renderer);
+            resizeButton.render(renderer);
         }
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
     }
-
+    SDL_DestroyTexture(buttonSheetTex);
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(outline);
     SDL_DestroyRenderer(renderer);
