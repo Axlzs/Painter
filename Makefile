@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -I/usr/include/SDL3_image `pkg-config --cflags sdl3`
-LDFLAGS = `pkg-config --libs sdl3` -lSDL3_image
+CXXFLAGS = -std=c++20 $(shell pkg-config --cflags sdl3 sdl3-image sdl3-ttf)
+LDFLAGS  = $(shell pkg-config --libs sdl3 sdl3-image sdl3-ttf)
 TARGET = painter
 TARGETDEL = painter.txt
 SOURCES = main.cpp mouse.cpp canvas.cpp ui.cpp

@@ -5,7 +5,8 @@
 #include "canvas.hpp"
 #include "ui.hpp"
 #include <bits/stdc++.h>
-#include <SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
 
 int main() {
     SDL_Window *window;
@@ -20,7 +21,7 @@ int main() {
         return SDL_APP_FAILURE;
     }
 
-    window = SDL_CreateWindow("Drawing App", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Painter", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
@@ -37,8 +38,50 @@ int main() {
     SDL_Texture* buttonSheetTex = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
 
-    // Create a button instance
-    Button resizeButton("resize", 100, 100, buttonSheetTex);
+    // Creating button instances
+    Button resizeButton("resize", 0, 0, buttonSheetTex);
+    Button paint_brushButton("paint_brush", 128, 0, buttonSheetTex);
+    Button bucketButton("bucket", 256, 0, buttonSheetTex);
+    Button pencilButton("pencil", 384, 0, buttonSheetTex);
+    Button spray_paintButton("spray_paint", 0, 128, buttonSheetTex);
+    Button eraseButton("erase", 0, 256, buttonSheetTex);
+
+    //////////////////////////////////////
+
+    /////////////////fonts////////////////
+    
+    // Initialize TTF
+    if (!TTF_Init()) {
+        SDL_Log("Couldn't initialize TTF: %s", SDL_GetError());
+        return 1;
+    }
+
+    // Load a font
+    TTF_Font *font = TTF_OpenFont("fonts/Roboto_SemiCondensed-Regular.ttf", FONTSIZE);
+
+    if (!font) {
+        SDL_Log("Couldn't load font: %s", SDL_GetError());
+        TTF_Quit();
+        return 1;
+    }
+
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "this is some text!", 0, FONTCOLOR);
+
+    if (!textSurface) {
+        std::cerr << "Text surface creation failed: " << SDL_GetError() << std::endl;
+        return 1;
+    }
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    if (!textTexture) {
+        std::cerr << "Text texture creation failed: " << SDL_GetError() << std::endl;
+        return 1;
+    }
+
+    int tw = textSurface->w;
+    int th = textSurface->h;
+    SDL_DestroySurface(textSurface); // surface no longer needed
 
     //////////////////////////////////////
 
@@ -88,10 +131,22 @@ int main() {
                 int y = event.motion.y;
 
                 if(resizeButton.mouseOverButton(x,y)) {
-                    std::cout<<"button is pressed :)"<<std::endl;
-                } else {
-                    std::cout<<"button not pressed :("<<std::endl;
-
+                    std::cout<<"resizeButton is pressed :)"<<std::endl;
+                }
+                if(paint_brushButton.mouseOverButton(x,y)) {
+                    std::cout<<"paint_brushButton is pressed :)"<<std::endl;
+                }
+                if(bucketButton.mouseOverButton(x,y)) {
+                    std::cout<<"bucketButton is pressed :)"<<std::endl;
+                }
+                if(pencilButton.mouseOverButton(x,y)) {
+                    std::cout<<"pencilButton is pressed :)"<<std::endl;
+                }
+                if(spray_paintButton.mouseOverButton(x,y)) {
+                    std::cout<<"spray_paintButton is pressed :)"<<std::endl;
+                }
+                if(eraseButton.mouseOverButton(x,y)) {
+                    std::cout<<"eraseButton is pressed :)"<<std::endl;
                 }
 
                 }
@@ -138,20 +193,36 @@ int main() {
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
         SDL_RenderTexture(renderer, outline, NULL, NULL);
-
+        
         // Draw menu if active
         if (show_menu) {
             menuScreen(renderer);
             resizeButton.render(renderer);
+            paint_brushButton.render(renderer);
+            bucketButton.render(renderer);
+            pencilButton.render(renderer);
+            spray_paintButton.render(renderer);
+            eraseButton.render(renderer);
         }
+        //redering text
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        //////////////////////////////////////
+        SDL_FRect dst = {300, (float)tw,   (float)tw, (float)th};
+        SDL_RenderTexture(renderer, textTexture, NULL, &dst);
 
+        //////////////////////////////////////
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
     }
     SDL_DestroyTexture(buttonSheetTex);
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(outline);
+
+    SDL_DestroyTexture(textTexture);
+    
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;

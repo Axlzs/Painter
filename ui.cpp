@@ -1,7 +1,5 @@
+#include <SDL3_ttf/SDL_ttf.h>
 #include "ui.hpp"
-#include <unordered_map>
-
-//extern std::unordered_map<std::string, Buttons> buttonData;
 
 Button::Button(const std::string& type, int x, int y, SDL_Texture* spritesheet)
     : buttonInfo(buttonData.at(type)), uiTexture(spritesheet){

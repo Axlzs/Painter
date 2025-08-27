@@ -1,8 +1,12 @@
 Menu:
     [+] menu opens
     [+] make transparent
-    [-] make buttons
-    [-] button configs
+    [+] make buttons
+    [-] keybinds
+    [-] hotbar
+    [-] color wheel
+    [-] color presets
+    [-] color hotbar
 
 Drawing: 
     [+] brush interpolation
