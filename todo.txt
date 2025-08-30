@@ -19,7 +19,6 @@ Drawing:
     [+] create brush outline 
     [-] ctrl+z
     [-] bucket fill
-    [-] circle brush performace issues
 
 Screen:
     [-] change window size
@@ -28,8 +27,6 @@ Screen:
     [-] move around canvas
 
 
-Struct CityRecord{
-    name
-    population
-    lattitude, longitude
-}
+Fix: 
+    [-] DrawBrush gets input as int but renders as float which makes float useless 
+    [-] Remake circle with Midpoint circle algorithm

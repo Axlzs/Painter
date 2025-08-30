@@ -24,11 +24,12 @@ inline const std::unordered_map<std::string, Buttons> buttonData = {
 inline const std::string Button_location = "icons/buttons.png";
 
 class Button {
-public:
+private:
     SDL_Texture* uiTexture;
     SDL_FRect dstRect;
     SDL_FRect srcRect;
     const Buttons& buttonInfo;
+public:
 
     Button(const std::string& type, int x, int y, SDL_Texture* spritesheet);
     bool mouseOverButton(int mouseX, int mouseY);

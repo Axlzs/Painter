@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <gtest/gtest.h>
 #include <iostream>
 #include "Static_variables.hpp"
 #include "mouse.hpp"
@@ -27,7 +28,7 @@ int main() {
     outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
     
 
-    //////////button definitions//////////
+    ///////////////button definitions//////////////
     
     // Loading sprite sheet
     SDL_Surface* surface = IMG_Load(Button_location.c_str());
@@ -46,44 +47,11 @@ int main() {
     Button spray_paintButton("spray_paint", 0, 128, buttonSheetTex);
     Button eraseButton("erase", 0, 256, buttonSheetTex);
 
-    //////////////////////////////////////
+    ///////////////////////////////////////////////
 
-    /////////////////fonts////////////////
-    
-    // Initialize TTF
-    if (!TTF_Init()) {
-        SDL_Log("Couldn't initialize TTF: %s", SDL_GetError());
-        return 1;
-    }
+    /////////////////fonts and text////////////////
 
-    // Load a font
-    TTF_Font *font = TTF_OpenFont("fonts/Roboto_SemiCondensed-Regular.ttf", FONTSIZE);
-
-    if (!font) {
-        SDL_Log("Couldn't load font: %s", SDL_GetError());
-        TTF_Quit();
-        return 1;
-    }
-
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "this is some text!", 0, FONTCOLOR);
-
-    if (!textSurface) {
-        std::cerr << "Text surface creation failed: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-    if (!textTexture) {
-        std::cerr << "Text texture creation failed: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    int tw = textSurface->w;
-    int th = textSurface->h;
-    SDL_DestroySurface(textSurface); // surface no longer needed
-
-    //////////////////////////////////////
+    ///////////////////////////////////////////////
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -204,22 +172,12 @@ int main() {
             spray_paintButton.render(renderer);
             eraseButton.render(renderer);
         }
-        //redering text
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-        //////////////////////////////////////
-        SDL_FRect dst = {300, (float)tw,   (float)tw, (float)th};
-        SDL_RenderTexture(renderer, textTexture, NULL, &dst);
-
-        //////////////////////////////////////
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
     }
     SDL_DestroyTexture(buttonSheetTex);
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(outline);
-
-    SDL_DestroyTexture(textTexture);
-    
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 

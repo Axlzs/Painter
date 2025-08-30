@@ -1,0 +1,3 @@
+Google test is added as a git submodule
+Update:
+git submodule update --init --recursive
