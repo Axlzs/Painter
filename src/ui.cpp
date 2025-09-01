@@ -20,3 +20,4 @@ void Button::render(SDL_Renderer* renderer) const {
         SDL_RenderTexture(renderer, uiTexture, &srcRect, &dstRect);
     }
 }
+

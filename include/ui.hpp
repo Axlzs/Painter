@@ -13,15 +13,15 @@ struct Buttons {
 
 inline const std::unordered_map<std::string, Buttons> buttonData = {
 //  INDEX             X,    Y,      SIZE,   STATES
-    {"resize",       {0,    0,      128,    2}},
-    {"paint_brush",  {256,  0,      128,    2}},
-    {"bucket",       {512,  0,      128,    2}},
-    {"pencil",       {0,    128,    128,    2}},
-    {"spray_paint",  {256,  128,    128,    2}},
-    {"erase",        {512,  128,    128,    2}}
+    {"resize",       {0,    0,      64,    2}},
+    {"paint_brush",  {128,  0,      64,    2}},
+    {"bucket",       {256,  0,      64,    2}},
+    {"pencil",       {0,    64,     64,    2}},
+    {"spray_paint",  {128,  64,     64,    2}},
+    {"erase",        {256,  64,     64,    2}}
 };
 
-inline const std::string Button_location = "icons/buttons.png";
+
 
 class Button {
 private:

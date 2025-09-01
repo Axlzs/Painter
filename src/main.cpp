@@ -31,7 +31,7 @@ int main() {
     ///////////////button definitions//////////////
     
     // Loading sprite sheet
-    SDL_Surface* surface = IMG_Load(Button_location.c_str());
+    SDL_Surface* surface = IMG_Load(BUTTON_LOCATION);
     if (!surface) {
         std::cerr << "Failed to load image: " << SDL_GetError() << "\n";
         return 1;
@@ -41,15 +41,51 @@ int main() {
 
     // Creating button instances
     Button resizeButton("resize", 0, 0, buttonSheetTex);
-    Button paint_brushButton("paint_brush", 128, 0, buttonSheetTex);
-    Button bucketButton("bucket", 256, 0, buttonSheetTex);
-    Button pencilButton("pencil", 384, 0, buttonSheetTex);
-    Button spray_paintButton("spray_paint", 0, 128, buttonSheetTex);
-    Button eraseButton("erase", 0, 256, buttonSheetTex);
+    Button paint_brushButton("paint_brush", 74, 0, buttonSheetTex);
+    Button bucketButton("bucket", 148, 0, buttonSheetTex);
+    Button pencilButton("pencil", 222, 0, buttonSheetTex);
+    Button spray_paintButton("spray_paint", 296, 0, buttonSheetTex);
+    Button eraseButton("erase", 370, 0, buttonSheetTex);
 
     ///////////////////////////////////////////////
 
     /////////////////fonts and text////////////////
+    static TTF_Font *font = NULL;
+    SDL_Surface *text;
+    SDL_Texture *textTexture;
+
+    if (!TTF_Init()) {
+        SDL_Log("Couldn't initialise SDL_ttf: %s\n", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    /* Open the font */
+    font = TTF_OpenFont(FONT_LOCATION, FONTSIZE);
+    if (!font) {
+        SDL_Log("Couldn't open font: %s\n", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    /* Create the text */
+    text = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
+    if (text) {
+        textTexture = SDL_CreateTextureFromSurface(renderer, text);
+        SDL_DestroySurface(text);
+    }
+    if (!textTexture) {
+        SDL_Log("Couldn't create text: %s\n", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    SDL_FRect dst;
+    
+
+    /* Center the text and SCALE it up */
+    SDL_GetRenderOutputSize(renderer, &w, &h);
+    SDL_SetRenderScale(renderer, SCALE, SCALE);
+    SDL_GetTextureSize(textTexture, &dst.w, &dst.h);
+    dst.x = ((w / SCALE) - dst.w) / 2;
+    dst.y = ((h / SCALE) - dst.h) / 2;
 
     ///////////////////////////////////////////////
 
@@ -171,6 +207,7 @@ int main() {
             pencilButton.render(renderer);
             spray_paintButton.render(renderer);
             eraseButton.render(renderer);
+            SDL_RenderTexture(renderer, textTexture, NULL, &dst);
         }
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
@@ -180,6 +217,9 @@ int main() {
     SDL_DestroyTexture(outline);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
+    TTF_CloseFont(font);
+    TTF_Quit();
 
     SDL_DestroyWindow(window);
     SDL_Quit();
