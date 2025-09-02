@@ -51,8 +51,8 @@ int main() {
 
     /////////////////fonts and text////////////////
     static TTF_Font *font = NULL;
-    SDL_Surface *text;
-    SDL_Texture *textTexture;
+    SDL_Surface *text[3];
+    SDL_Texture *textTexture[3];
 
     if (!TTF_Init()) {
         SDL_Log("Couldn't initialise SDL_ttf: %s\n", SDL_GetError());
@@ -66,8 +66,13 @@ int main() {
         return SDL_APP_FAILURE;
     }
 
-    /* Create the text */
-    text = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
+    /* Create the text*/
+
+
+    text[0] = TTF_RenderText_Blended(font, "Settings", 0, BLACK);
+    text[1] = TTF_RenderText_Blended(font, "Quit", 0, BLACK);
+    text[2] = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
+
     if (text) {
         textTexture = SDL_CreateTextureFromSurface(renderer, text);
         SDL_DestroySurface(text);
