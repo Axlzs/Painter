@@ -66,31 +66,34 @@ int main() {
         return SDL_APP_FAILURE;
     }
 
-    /* Create the text*/
-
-
-    text[0] = TTF_RenderText_Blended(font, "Settings", 0, BLACK);
-    text[1] = TTF_RenderText_Blended(font, "Quit", 0, BLACK);
-    text[2] = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
-
-    if (text) {
-        textTexture = SDL_CreateTextureFromSurface(renderer, text);
-        SDL_DestroySurface(text);
-    }
-    if (!textTexture) {
-        SDL_Log("Couldn't create text: %s\n", SDL_GetError());
-        return SDL_APP_FAILURE;
-    }
-
-    SDL_FRect dst;
     
+    
+    /* Assign text to surface*/
+    text[0] = TTF_RenderText_Blended(font, "Settings", 0, BLACK);
+    text[1] = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
+    text[2] = TTF_RenderText_Blended(font, "Quit", 0, BLACK);
 
-    /* Center the text and SCALE it up */
-    SDL_GetRenderOutputSize(renderer, &w, &h);
-    SDL_SetRenderScale(renderer, SCALE, SCALE);
-    SDL_GetTextureSize(textTexture, &dst.w, &dst.h);
-    dst.x = ((w / SCALE) - dst.w) / 2;
-    dst.y = ((h / SCALE) - dst.h) / 2;
+    SDL_FRect dst[3];    
+
+    for(int i=0; i<3; i++){
+        if(text[i]){
+            textTexture[i] = SDL_CreateTextureFromSurface(renderer, text[i]);
+            SDL_DestroySurface(text[i]);
+        }
+        std::cout<<"surface initialized"<<std::endl;
+        if (!textTexture[i]) {
+            SDL_Log("Couldn't create text: %s\n", SDL_GetError());
+            return SDL_APP_FAILURE;
+        }
+
+        SDL_GetRenderOutputSize(renderer, &w[i], &h[i]);
+        SDL_SetRenderScale(renderer, SCALE, SCALE);
+        // Getting width and height for text
+        SDL_GetTextureSize(textTexture[i], &dst[i].w, &dst[i].h);
+        dst[i].x = 30;
+        dst[i].y = ((h[i] / SCALE) - dst[i].h) / 2 + dst[i].h*2*i;
+
+    }
 
     ///////////////////////////////////////////////
 
@@ -212,7 +215,9 @@ int main() {
             pencilButton.render(renderer);
             spray_paintButton.render(renderer);
             eraseButton.render(renderer);
-            SDL_RenderTexture(renderer, textTexture, NULL, &dst);
+            for(int i = 0; i<=3; i++){
+                SDL_RenderTexture(renderer, textTexture[i], NULL, &dst[i]);
+            }
         }
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
