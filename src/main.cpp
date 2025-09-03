@@ -51,8 +51,8 @@ int main() {
 
     /////////////////fonts and text////////////////
     static TTF_Font *font = NULL;
-    SDL_Surface *text[3];
-    SDL_Texture *textTexture[3];
+    SDL_Surface *text[TOTALTEXTS];
+    SDL_Texture *textTexture[TOTALTEXTS];
 
     if (!TTF_Init()) {
         SDL_Log("Couldn't initialise SDL_ttf: %s\n", SDL_GetError());
@@ -73,14 +73,14 @@ int main() {
     text[1] = TTF_RenderText_Blended(font, "Hello World!", 0, BLACK);
     text[2] = TTF_RenderText_Blended(font, "Quit", 0, BLACK);
 
-    SDL_FRect dst[3];    
+    SDL_FRect dst[TOTALTEXTS];    
 
-    for(int i=0; i<3; i++){
+    for(int i=0; i<TOTALTEXTS; i++){
         if(text[i]){
             textTexture[i] = SDL_CreateTextureFromSurface(renderer, text[i]);
             SDL_DestroySurface(text[i]);
         }
-        std::cout<<"surface initialized"<<std::endl;
+
         if (!textTexture[i]) {
             SDL_Log("Couldn't create text: %s\n", SDL_GetError());
             return SDL_APP_FAILURE;
@@ -161,6 +161,14 @@ int main() {
                     std::cout<<"eraseButton is pressed :)"<<std::endl;
                 }
 
+                for(int i = 0; i < TOTALTEXTS; i++){
+                    if(checkClick(x,y,dst[i])){
+                        if(i==0){std::cout<<"settings accessed"<<std::endl;}
+                        if(i==1){std::cout<<"hello world accessed"<<std::endl;}
+                        if(i==2){std::cout<<"quit accessed"<<std::endl;}
+                    }
+                }
+
                 }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
@@ -215,7 +223,7 @@ int main() {
             pencilButton.render(renderer);
             spray_paintButton.render(renderer);
             eraseButton.render(renderer);
-            for(int i = 0; i<=3; i++){
+            for(int i = 0; i<=TOTALTEXTS; i++){
                 SDL_RenderTexture(renderer, textTexture[i], NULL, &dst[i]);
             }
         }

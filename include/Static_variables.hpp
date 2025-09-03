@@ -23,6 +23,7 @@ SDL_Color FONTCOLOR  = {0, 0, 0, 255};
 inline const char* BUTTON_LOCATION = "icons/buttons.png";
 
 //////////////////////FONTS//////////////////////
+int TOTALTEXTS = 3;
 float FONTSIZE = 20.0f;
 inline const char* FONT_LOCATION = "fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf";
 int w[3] = {0,0,0};

@@ -21,3 +21,9 @@ void Button::render(SDL_Renderer* renderer) const {
     }
 }
 
+bool checkClick(int mouseX, int mouseY, SDL_FRect rect){
+    return (mouseX >= rect.x &&
+            mouseX <  rect.x + rect.w &&
+            mouseY >= rect.y &&
+            mouseY <  rect.y + rect.h);
+}

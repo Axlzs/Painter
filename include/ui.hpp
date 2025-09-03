@@ -36,5 +36,6 @@ public:
     void render(SDL_Renderer* renderer) const;
 };
 
+bool checkClick(int mouseX, int mouseY, SDL_FRect rect);
 
 #endif
