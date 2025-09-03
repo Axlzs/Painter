@@ -165,7 +165,7 @@ int main() {
                     if(checkClick(x,y,dst[i])){
                         if(i==0){std::cout<<"settings accessed"<<std::endl;}
                         if(i==1){std::cout<<"hello world accessed"<<std::endl;}
-                        if(i==2){std::cout<<"quit accessed"<<std::endl;}
+                        if(i==2){running = false;}
                     }
                 }
 

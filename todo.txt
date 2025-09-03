@@ -2,7 +2,10 @@ Menu:
     [+] menu opens
     [+] make transparent
     [+] make buttons
+        [+] text buttons
     [-] keybinds
+        [-] keybind screen 
+        [-] user input
     [-] hotbar
     [-] color wheel
     [-] color presets
