@@ -2,11 +2,25 @@
 
 #include <cmath>
 #include "mouse.hpp"
+#include <vector>
 
 
 MouseType BRUSHTYPE = MouseType::RECT;
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
+
+struct Stroke {
+    std::vector<SDL_Point> points;
+    SDL_Color color;
+    int brushSize;
+    MouseType brushType;
+};
+
+void addStroke(int x, int y, int size, SDL_Color color, MouseType type, bool drawing){
+    while(drawing){
+        
+    }
+}
 
 void DrawBrush(SDL_Renderer *renderer, int x, int y, int size, SDL_Color color, MouseType type) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);

@@ -109,7 +109,6 @@ int main() {
                 int x = event.motion.x;
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
-
                 DrawBrush(renderer, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
                 prev_x = event.button.x;
                 prev_y = event.button.y;

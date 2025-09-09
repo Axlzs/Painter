@@ -22,6 +22,7 @@ Drawing:
     [+] create brush outline 
     [-] ctrl+z
     [-] bucket fill
+    [-] shape tool (connect points)
 
 Screen:
     [-] change window size
