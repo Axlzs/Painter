@@ -12,6 +12,7 @@ bool show_menu = false;  // menu toggle state
 
 /////////////////////BUTTONS/////////////////////
 int NUMOFSTROKES = 0;
+int CURRENTSTROKES = 2;
 int BRUSHSIZE = 10;
 int CURRENTSIZE = 10;
 SDL_Color BRUSHCOLOR = {255, 0, 0, 255};

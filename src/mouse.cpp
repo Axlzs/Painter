@@ -8,15 +8,26 @@
 MouseType BRUSHTYPE = MouseType::RECT;
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
+int extern NUMOFSTROKES;
+int extern CURRENTSTROKES;
 
 struct Stroke {
     std::vector<SDL_Point> points;
     SDL_Color color;
     int brushSize;
     MouseType brushType;
+
+    Stroke()
 };
+std::vector<Stroke> AllStrokes;
+SDL_Point temp;
 
 void addStroke(int x, int y, int size, SDL_Color color, MouseType type, bool drawing){
+    if(CURRENTSTROKES!=NUMOFSTROKES){
+        temp.x = x;
+        temp.y = y;
+
+    }
     while(drawing){
         
     }
