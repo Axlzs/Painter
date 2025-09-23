@@ -34,3 +34,8 @@ Screen:
 Fix: 
     [-] DrawBrush gets input as int but renders as float which makes float useless 
     [-] Remake circle with Midpoint circle algorithm
+
+Optimizations:
+    - previous BresenhalmActivate interpolation function set render target on every pixel(called SDL_SetRenderTarget(renderer, texture);)
+    + now it's set only once per stroke 
+    

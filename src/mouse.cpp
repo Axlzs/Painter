@@ -66,33 +66,40 @@ void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color c
         }
     }
 }
-void BresenhalmActivate(SDL_Renderer* renderer, SDL_Texture* texture, int x1, int y1, int x2, int y2) {
+void BresenhalmActivate(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, MouseType type, SDL_Color color, int brushsize) {
     
     // Distance between points
     int dx = x2 - x1;
     int dy = y2 - y1;
     float dist = sqrt(dx*dx + dy*dy);
 
-    // step BRUSHSIZE: smaller = smoother line
+    // step for brush: smaller = smoother line
     float step = 1.0f; 
 
     for (float i = 0; i < dist; i += step) {
         float t = i / dist;  // normalized [0,1]
         int x = (int)std::lerp((float)x1, (float)x2, t);
         int y = (int)std::lerp((float)y1, (float)y2, t);
-        SDL_SetRenderTarget(renderer, texture);
-        //DrawBrush(renderer, x, y);
+        DrawBrush(renderer, x, y, type, color, brushsize);
     }
 
     // ensure last point is drawn
-    //DrawBrush(renderer, x2, y2);
+    DrawBrush(renderer, x2, y2, type, color, brushsize);
 }
 
 void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture){
     for (auto i: AllStrokes) {
-        for (auto j: i.points){
-                DrawBrush(renderer, j.x, j.y, i.brushType, i.color, i.brushSize);
+        SDL_Point prev = i.points[0];
+        SDL_SetRenderTarget(renderer, texture);
+        if(i.points.size()>1){
+            for (auto j = 1; j < i.points.size(); j++){
+                BresenhalmActivate(renderer, prev.x, prev.y, i.points[j].x, i.points[j].y, i.brushType, i.color, i.brushSize);
+                prev = i.points[j];
+            }
+        } else {
+            DrawBrush(renderer, prev.x, prev.y, i.brushType, i.color, i.brushSize);
         }
+        SDL_SetRenderTarget(renderer, NULL);
     }
 }
 

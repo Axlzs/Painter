@@ -110,8 +110,7 @@ int main() {
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
                 createStroke(x,y);
-                prev_x = event.button.x;
-                prev_y = event.button.y;
+
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && 
@@ -126,10 +125,8 @@ int main() {
                 int x = event.motion.x;
                 int y = event.motion.y;
                 addStroke(x, y);
-                
                 MakeOutline(renderer, outline, x, y);
-                prev_x = x;
-                prev_y = y;
+                
             } 
             if (event.type == SDL_EVENT_MOUSE_MOTION && !drawing && !show_menu){
                 int x = event.motion.x;
@@ -176,7 +173,6 @@ int main() {
                 }
                 if (event.key.key == SDLK_UP && !drawing) {     // increase brush size
                     changeBrushSize(1);
-
                 }
                 if (event.key.key == SDLK_DOWN && !drawing) {   // decrease brush size
                     changeBrushSize(-1);
@@ -199,7 +195,7 @@ int main() {
         SDL_SetRenderTarget(renderer, NULL);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
-        drawStroke(renderer,texture);
+        drawStroke(renderer,texture); // this is in the wrong place and should realistically run only once per stroke
         SDL_RenderTexture(renderer, texture, NULL, NULL);
         SDL_RenderTexture(renderer, outline, NULL, NULL);
         
