@@ -9,8 +9,14 @@ enum class MouseType {
 
 extern MouseType BRUSHTYPE;
 
-void DrawBrush(SDL_Renderer *renderer, int x, int y, int size, SDL_Color color, MouseType type);
-void BresenhalmActivate(SDL_Renderer* renderer, SDL_Texture* texture, int x1, int y1, int x2, int y2, int size, SDL_Color color, MouseType type);
-void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int size, MouseType type);
+void createStroke(int x, int y);
+void addStroke(int x, int y);
+void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color color, int brushsize);
+void BresenhalmActivate(SDL_Renderer* renderer, SDL_Texture* texture, int x1, int y1, int x2, int y2);
+void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture);
+void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y);
+void changeBrushSize(int x);
+void changeBrushType(MouseType type);
+void changeEraser();
 
 #endif

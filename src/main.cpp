@@ -109,7 +109,7 @@ int main() {
                 int x = event.motion.x;
                 int y = event.motion.y;
                 SDL_SetRenderTarget(renderer, texture);
-                DrawBrush(renderer, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
+                createStroke(x,y);
                 prev_x = event.button.x;
                 prev_y = event.button.y;
             }
@@ -119,22 +119,22 @@ int main() {
                 drawing = false;
                 int x = event.motion.x;
                 int y = event.motion.y;
-                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
+                MakeOutline(renderer, outline, x, y);
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION && drawing) {
                 int x = event.motion.x;
                 int y = event.motion.y;
-
-                BresenhalmActivate(renderer, texture, prev_x, prev_y, x, y, CURRENTSIZE, CURRENTCOLOR, BRUSHTYPE);
-                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
+                addStroke(x, y);
+                
+                MakeOutline(renderer, outline, x, y);
                 prev_x = x;
                 prev_y = y;
             } 
             if (event.type == SDL_EVENT_MOUSE_MOTION && !drawing && !show_menu){
                 int x = event.motion.x;
                 int y = event.motion.y;
-                MakeOutline(renderer, outline, x, y, CURRENTSIZE, BRUSHTYPE);
+                MakeOutline(renderer, outline, x, y);
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT && show_menu) {
@@ -174,32 +174,21 @@ int main() {
                 if (event.key.key == SDLK_TAB) {    // toggle menu
                     show_menu = !show_menu;
                 }
-                if (event.key.key == SDLK_UP) {     // increase brush size
-                    CURRENTSIZE++;
+                if (event.key.key == SDLK_UP && !drawing) {     // increase brush size
+                    changeBrushSize(1);
 
                 }
-                if (event.key.key == SDLK_DOWN) {   // decrease brush size
-                    if(BRUSHSIZE>0){
-                        CURRENTSIZE--;
-                    }
+                if (event.key.key == SDLK_DOWN && !drawing) {   // decrease brush size
+                    changeBrushSize(-1);
                 }
-                if (event.key.key == SDLK_C) {      // set brush to circle
-                    BRUSHTYPE = MouseType::CIRCLE;
-                    CURRENTCOLOR = BRUSHCOLOR;
-                    CURRENTSIZE = BRUSHSIZE;
+                if (event.key.key == SDLK_C && !drawing) {      // set brush to circle
+                    changeBrushType(MouseType::CIRCLE);
                 }
-                if (event.key.key == SDLK_R) {      // set brush to rect
-                    BRUSHTYPE = MouseType::RECT;
-                    CURRENTCOLOR = BRUSHCOLOR;
-                    CURRENTSIZE = BRUSHSIZE;
+                if (event.key.key == SDLK_R && !drawing) {      // set brush to rect
+                    changeBrushType(MouseType::RECT);
                 }
-                if (event.key.key == SDLK_DELETE) { // delete everything
-                    clearCanvas(renderer, texture);
-                }
-                if (event.key.key == SDLK_E) { // delete everything
-                    BRUSHSIZE = CURRENTSIZE;
-                    CURRENTSIZE = BRUSHSIZE*2;
-                    CURRENTCOLOR = GLOBALBACKGROUND;
+                if (event.key.key == SDLK_E) { // eraser
+                    changeEraser();
                 }
             }
 
@@ -210,6 +199,7 @@ int main() {
         SDL_SetRenderTarget(renderer, NULL);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
+        drawStroke(renderer,texture);
         SDL_RenderTexture(renderer, texture, NULL, NULL);
         SDL_RenderTexture(renderer, outline, NULL, NULL);
         
