@@ -15,12 +15,13 @@ Drawing:
     [+] brush interpolation
     [+] pen (squares)
     [+] change size
-    [+] erase all
     [+] marker
     [+] eraser
-    [+] make points
+    [+] make dots
     [+] create brush outline 
-    [-] ctrl+z
+    [+] ctrl+z - undo
+    [-] ctrl+y - redo 
+    [-] change colors
     [-] bucket fill
     [-] shape tool (connect points)
 
@@ -34,6 +35,7 @@ Screen:
 Fix: 
     [-] DrawBrush gets input as int but renders as float which makes float useless 
     [-] Remake circle with Midpoint circle algorithm
+    [-] Check makeOutline for useless render calls
 
 Optimizations:
     - previous BresenhalmActivate interpolation function set render target on every pixel(called SDL_SetRenderTarget(renderer, texture);)
