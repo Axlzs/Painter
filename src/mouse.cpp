@@ -88,9 +88,25 @@ void BresenhalmActivate(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, 
 }
 
 void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture){
+    if (AllStrokes.size()>0){
+        SDL_SetRenderTarget(renderer, texture);
+        auto last_stroke = AllStrokes.back();
+        SDL_Point prev = last_stroke.points[0];
+        if(last_stroke.points.size()>1){
+            for (auto i = 1; i < last_stroke.points.size(); i++){
+                BresenhalmActivate(renderer, prev.x, prev.y, last_stroke.points[i].x, last_stroke.points[i].y, last_stroke.brushType, last_stroke.color, last_stroke.brushSize);
+                prev = last_stroke.points[i];
+            }
+        } else {
+                DrawBrush(renderer, prev.x, prev.y, last_stroke.brushType, last_stroke.color, last_stroke.brushSize);
+        }
+        SDL_SetRenderTarget(renderer, NULL);
+    }
+}
+
+void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture){
     for (auto i: AllStrokes) {
         SDL_Point prev = i.points[0];
-        SDL_SetRenderTarget(renderer, texture);
         if(i.points.size()>1){
             for (auto j = 1; j < i.points.size(); j++){
                 BresenhalmActivate(renderer, prev.x, prev.y, i.points[j].x, i.points[j].y, i.brushType, i.color, i.brushSize);
@@ -99,7 +115,12 @@ void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture){
         } else {
             DrawBrush(renderer, prev.x, prev.y, i.brushType, i.color, i.brushSize);
         }
-        SDL_SetRenderTarget(renderer, NULL);
+    }
+}
+
+void undoStroke(){
+    if (AllStrokes.size()>0){
+        AllStrokes.pop_back();
     }
 }
 

@@ -186,6 +186,14 @@ int main() {
                 if (event.key.key == SDLK_E) { // eraser
                     changeEraser();
                 }
+                if ((event.key.key == SDLK_Z) && (event.key.mod == SDL_KMOD_LCTRL)){
+                    SDL_SetRenderTarget(renderer, texture);
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                    SDL_RenderClear(renderer);
+                    undoStroke();
+                    reDrawStrokes(renderer,texture);
+                    SDL_SetRenderTarget(renderer, NULL);
+                }
             }
 
         }
