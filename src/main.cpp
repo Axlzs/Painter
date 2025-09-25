@@ -194,6 +194,14 @@ int main() {
                     reDrawStrokes(renderer,texture);
                     SDL_SetRenderTarget(renderer, NULL);
                 }
+                if ((event.key.key == SDLK_Y) && (event.key.mod == SDL_KMOD_LCTRL)){
+                    SDL_SetRenderTarget(renderer, texture);
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                    SDL_RenderClear(renderer);
+                    redoStroke();
+                    reDrawStrokes(renderer,texture);
+                    SDL_SetRenderTarget(renderer, NULL);
+                }
             }
 
         }

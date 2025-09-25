@@ -16,6 +16,7 @@ void BresenhalmActivate(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, 
 void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture);
 void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture);
 void undoStroke();
+void redoStroke();
 void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y);
 void changeBrushSize(int x);
 void changeBrushType(MouseType type);

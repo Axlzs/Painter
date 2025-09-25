@@ -12,6 +12,7 @@ int CURRENTSTROKES = 2;
 int BRUSHSIZE = 10;
 int CURRENTSIZE = 10;
 int ERASERSIZE = 20;
+int vectorSize = 0;
 SDL_Color BRUSHCOLOR = {255, 0, 0, 255};
 SDL_Color CURRENTCOLOR = {255, 0, 0, 255};
 SDL_Color RED = {255, 0, 0, 255};
@@ -33,6 +34,7 @@ struct Stroke {
     MouseType brushType;
 };
 std::vector<Stroke> AllStrokes;
+std::vector<Stroke> UndoStrokes;
 
 Stroke newStroke;
 
@@ -120,7 +122,20 @@ void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture){
 
 void undoStroke(){
     if (AllStrokes.size()>0){
+        UndoStrokes.push_back(AllStrokes.back());
         AllStrokes.pop_back();
+        vectorSize = AllStrokes.size();
+    }
+}
+void redoStroke(){
+    if (UndoStrokes.size()>0){
+        if(AllStrokes.size() == vectorSize){
+            AllStrokes.push_back(UndoStrokes.back());
+            UndoStrokes.pop_back();
+            vectorSize = AllStrokes.size();
+        } else {
+                UndoStrokes.clear();
+        }
     }
 }
 
