@@ -146,12 +146,12 @@ void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y){
     SDL_RenderClear(renderer); // immediately overlays the invisible color
     SDL_SetRenderDrawColor(renderer, 0,0,0,180);
     if (BRUSHTYPE == MouseType::RECT) {
-        SDL_FRect rect = { (float)(x - BRUSHSIZE/2), (float)(y - BRUSHSIZE/2), (float)BRUSHSIZE, (float)BRUSHSIZE };
+        SDL_FRect rect = { (float)(x - CURRENTSIZE/2), (float)(y - CURRENTSIZE/2), (float)CURRENTSIZE, (float)CURRENTSIZE };
         SDL_RenderRect(renderer, &rect); // draws the textrue
     } else if (BRUSHTYPE == MouseType::CIRCLE) {
-        for (int dy = -BRUSHSIZE/2; dy <= BRUSHSIZE/2; dy++) {
-            for (int dx = -BRUSHSIZE/2; dx <= BRUSHSIZE/2; dx++) {
-                if (dx*dx + dy*dy <= (BRUSHSIZE/2)*(BRUSHSIZE/2)&& dx*dx + dy*dy >=(BRUSHSIZE/2-1)*(BRUSHSIZE/2-1)) {
+        for (int dy = -CURRENTSIZE/2; dy <= CURRENTSIZE/2; dy++) {
+            for (int dx = -CURRENTSIZE/2; dx <= CURRENTSIZE/2; dx++) {
+                if (dx*dx + dy*dy <= (CURRENTSIZE/2)*(CURRENTSIZE/2)&& dx*dx + dy*dy >=(CURRENTSIZE/2-1)*(CURRENTSIZE/2-1)) {
                     SDL_RenderPoint(renderer, x + dx, y + dy);
                 }
             }
