@@ -7,12 +7,10 @@
 
 /////////////////////BUTTONS/////////////////////
 bool ERASERSTATE = false;
-int NUMOFSTROKES = 0;
-int CURRENTSTROKES = 2;
 int BRUSHSIZE = 10;
 int CURRENTSIZE = 10;
 int ERASERSIZE = 20;
-int vectorSize = 0;
+int strokesToRedo = 0;
 SDL_Color BRUSHCOLOR = {255, 0, 0, 255};
 SDL_Color CURRENTCOLOR = {255, 0, 0, 255};
 SDL_Color RED = {255, 0, 0, 255};
@@ -24,8 +22,6 @@ MouseType BRUSHTYPE = MouseType::RECT;
 
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
-int extern NUMOFSTROKES;
-int extern CURRENTSTROKES;
 
 struct Stroke {
     std::vector<SDL_Point> points;
@@ -45,11 +41,13 @@ void createStroke(int x, int y){
     newStroke.brushType = BRUSHTYPE;
     newStroke.points.push_back({x, y});
     AllStrokes.push_back(newStroke);
+    strokesToRedo=0;    
 }
 
 void addStroke(int x, int y){
     newStroke.points.push_back({x, y});
     AllStrokes.back().points.push_back({x, y});
+    
 }
 
 void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color color, int brushsize) {
@@ -124,17 +122,18 @@ void undoStroke(){
     if (AllStrokes.size()>0){
         UndoStrokes.push_back(AllStrokes.back());
         AllStrokes.pop_back();
-        vectorSize = AllStrokes.size();
+        strokesToRedo = AllStrokes.size();
     }
 }
 void redoStroke(){
     if (UndoStrokes.size()>0){
-        if(AllStrokes.size() == vectorSize){
+        if(AllStrokes.size() == strokesToRedo){
             AllStrokes.push_back(UndoStrokes.back());
             UndoStrokes.pop_back();
-            vectorSize = AllStrokes.size();
+            strokesToRedo = AllStrokes.size();
         } else {
-                UndoStrokes.clear();
+            UndoStrokes.clear();
+            std::cout<<"undostroke cleared!!"<<std::endl;
         }
     }
 }
