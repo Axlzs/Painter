@@ -15,6 +15,7 @@ int main() {
     SDL_Texture *texture;
     SDL_Texture *outline;
     SDL_Texture *uiElements;
+    SDL_Surface *colorWheel;
     SDL_Event event;
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {

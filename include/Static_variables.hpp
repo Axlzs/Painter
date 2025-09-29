@@ -11,6 +11,7 @@ bool running = true;
 bool show_menu = false;  // menu toggle state
 SDL_Color BLACK = {0, 0, 0, 255};
 inline const char* BUTTON_LOCATION = "icons/buttons.png";
+inline const char* COLOR_WHEEL_LOCATION = "icons/colorWheel.png";
 
 //////////////////////FONTS//////////////////////
 int TOTALTEXTS = 3;

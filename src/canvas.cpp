@@ -16,3 +16,13 @@ void menuScreen(SDL_Renderer *renderer){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);  // semi-transparent black
     SDL_RenderFillRect(renderer, &menuRect);
 }
+
+void colorPicker(SDL_Renderer *renderer){
+    // Loading sprite sheet
+    SDL_Surface* surface = IMG_Load(COLOR_WHEEL_LOCATION);
+    if (!surface) {
+        std::cerr << "Failed to load image: " << SDL_GetError() << "\n";
+        return 1;
+    }
+
+}
