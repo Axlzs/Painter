@@ -1,4 +1,5 @@
 #include "canvas.hpp"
+
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
 SDL_Color extern GLOBALBACKGROUND;
@@ -17,12 +18,12 @@ void menuScreen(SDL_Renderer *renderer){
     SDL_RenderFillRect(renderer, &menuRect);
 }
 
-void colorPicker(SDL_Renderer *renderer){
-    // Loading sprite sheet
-    SDL_Surface* surface = IMG_Load(COLOR_WHEEL_LOCATION);
-    if (!surface) {
-        std::cerr << "Failed to load image: " << SDL_GetError() << "\n";
-        return 1;
-    }
+// void colorPicker(SDL_Renderer *renderer){
+//     // Loading sprite sheet
+//     SDL_Surface* surface = IMG_Load(COLOR_WHEEL_LOCATION);
+//     if (!surface) {
+//         std::cerr << "Failed to load image: " << SDL_GetError() << "\n";
+//         return 1;
+//     }
 
-}
+// }
