@@ -9,6 +9,25 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 
+struct camera{
+    SDL_FPoint offset = {0,0};
+    float zoom = 1;
+}camera;
+
+SDL_FRect WINDOW = {
+    camera.offset.x,
+    camera.offset.y,
+    WINDOWWIDTH*camera.zoom,
+    WINDOWHEIGHT*camera.zoom
+};
+void moveWindow(float x1, float y1, float x2, float y2){
+    dx = x2 - x1;
+    dy = y2 - y1;
+    
+    WINDOW.x += dx;
+    WINDOW.y += dy;
+}
+
 int main() {
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -23,10 +42,10 @@ int main() {
         return SDL_APP_FAILURE;
     }
 
-    window = SDL_CreateWindow("Painter", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Painter", WINDOW.w, WINDOW.h, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
-    outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOWWIDTH, WINDOWHEIGHT);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CANVASWWIDTH, CANVASHEIGHT);
+    outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CANVASWWIDTH, CANVASHEIGHT);
     
 
     ///////////////button definitions//////////////
@@ -102,6 +121,12 @@ int main() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
+            }
+            if(SDL_EVENT_WINDOW_RESIZED){
+                int newW, newH;
+                SDL_GetWindowSize(window, &newW, &newH);
+                WINDOW.w = newW; 
+                WINDOW.h = newH;
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && 
@@ -212,13 +237,20 @@ int main() {
         SDL_SetRenderTarget(renderer, NULL);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
         SDL_RenderClear(renderer);
-        drawStroke(renderer,texture); // this is in the wrong place and should realistically run only once per stroke
-        SDL_RenderTexture(renderer, texture, NULL, NULL);
-        SDL_RenderTexture(renderer, outline, NULL, NULL);
+        drawStroke(renderer,texture); // continuously renders only the last stroke
+        // Compute camera destination
+        SDL_FRect dest = {
+            -camera.offset.x * camera.zoom,
+            -camera.offset.y * camera.zoom,
+            CANVASWWIDTH * camera.zoom,
+            CANVASHEIGHT * camera.zoom
+        };
+        SDL_RenderTexture(renderer, texture, NULL, &dest);
+        SDL_RenderTexture(renderer, outline, NULL, &dest);
         
         // Draw menu if active
         if (show_menu) {
-            menuScreen(renderer);
+            menuScreen(renderer, WINDOW);
             resizeButton.render(renderer);
             paint_brushButton.render(renderer);
             bucketButton.render(renderer);
