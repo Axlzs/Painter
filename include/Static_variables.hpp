@@ -1,17 +1,32 @@
 #ifndef STATIC_VARIABLES_HPP
 #define STATIC_VARIABLES_HPP
 
-int WINDOWWIDTH = 900;
-int WINDOWHEIGHT = 700;
+float WINDOWWIDTH = 900;
+float WINDOWHEIGHT = 700;
 
-int CANVASWWIDTH = 3000;
-int CANVASHEIGHT = 3000;
+float CANVASWWIDTH = 3000;
+float CANVASHEIGHT = 3000;
 const float SCALE = 1.0f;
+float ZOOMINTERVAL = 0.01;
 
-int prev_x = -1, prev_y = -1;
+float prev_x = -1, prev_y = -1;
 int dx, dy;
 bool drawing = false;
 bool running = true;
+bool UPDATEZOOM = false;
+bool moving = false;
+
+struct mouseState {
+    float x1; // previous x
+    float y1; // previous y
+    float x2;
+    float x2;
+
+    bool drawing = false;
+    bool updateZoom = false;
+    bool moving = false;
+};
+
 bool show_menu = false;  // menu toggle state
 SDL_Color BLACK = {0, 0, 0, 255};
 inline const char* BUTTON_LOCATION = "icons/buttons.png";

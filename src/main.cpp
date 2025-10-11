@@ -17,15 +17,34 @@ struct camera{
 SDL_FRect WINDOW = {
     camera.offset.x,
     camera.offset.y,
-    WINDOWWIDTH*camera.zoom,
-    WINDOWHEIGHT*camera.zoom
+    WINDOWWIDTH,
+    WINDOWHEIGHT
 };
+
+SDL_FRect CANVAS = {
+    camera.offset.x,
+    camera.offset.y,
+    CANVASWWIDTH,
+    CANVASHEIGHT
+};
+void updateZoom(){
+
+    WINDOW.x*=camera.zoom;
+    WINDOW.y*=camera.zoom;
+    WINDOW.w*=camera.zoom;
+    WINDOW.h*=camera.zoom;
+
+    CANVAS.x*=camera.zoom;
+    CANVAS.y*=camera.zoom;
+    CANVAS.w*=camera.zoom;
+    CANVAS.h*=camera.zoom;
+
+}
 void moveWindow(float x1, float y1, float x2, float y2){
     dx = x2 - x1;
     dy = y2 - y1;
-    
-    WINDOW.x += dx;
-    WINDOW.y += dy;
+    CANVAS.x += dx;
+    CANVAS.y += dy;
 }
 
 int main() {
@@ -47,6 +66,9 @@ int main() {
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CANVASWWIDTH, CANVASHEIGHT);
     outline = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CANVASWWIDTH, CANVASHEIGHT);
     
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
+    SDL_RenderClear(renderer);
 
     ///////////////button definitions//////////////
     
@@ -128,14 +150,51 @@ int main() {
                 WINDOW.w = newW; 
                 WINDOW.h = newH;
             }
-
-            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && 
-                event.button.button == SDL_BUTTON_LEFT && !show_menu) {
-                drawing = true;
+            
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
                 int x = event.motion.x;
                 int y = event.motion.y;
-                SDL_SetRenderTarget(renderer, texture);
-                createStroke(x,y);
+
+                if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
+                    drawing = true;
+                    SDL_SetRenderTarget(renderer, texture);
+                    createStroke(x,y);
+                }
+
+                if (event.button.button == SDL_BUTTON_MIDDLE && !show_menu){
+                    moving = true;
+                    prev_x = x;
+                    prev_y = y;
+                }
+
+                if (event.button.button == SDL_BUTTON_LEFT && show_menu){
+                    if(resizeButton.mouseOverButton(x,y)) {
+                        std::cout<<"resizeButton is pressed :)"<<std::endl;
+                    }
+                    if(paint_brushButton.mouseOverButton(x,y)) {
+                        std::cout<<"paint_brushButton is pressed :)"<<std::endl;
+                    }
+                    if(bucketButton.mouseOverButton(x,y)) {
+                        std::cout<<"bucketButton is pressed :)"<<std::endl;
+                    }
+                    if(pencilButton.mouseOverButton(x,y)) {
+                        std::cout<<"pencilButton is pressed :)"<<std::endl;
+                    }
+                    if(spray_paintButton.mouseOverButton(x,y)) {
+                        std::cout<<"spray_paintButton is pressed :)"<<std::endl;
+                    }
+                    if(eraseButton.mouseOverButton(x,y)) {
+                        std::cout<<"eraseButton is pressed :)"<<std::endl;
+                    }
+
+                    for(int i = 0; i < TOTALTEXTS; i++){
+                        if(checkClick(x,y,dst[i])){
+                            if(i==0){std::cout<<"settings accessed"<<std::endl;}
+                            if(i==1){std::cout<<"hello world accessed"<<std::endl;}
+                            if(i==2){running = false;}
+                        }
+                    }
+                }
 
             }
 
@@ -147,51 +206,32 @@ int main() {
                 MakeOutline(renderer, outline, x, y);
             }
 
-            if (event.type == SDL_EVENT_MOUSE_MOTION && drawing) {
+            if (event.type == SDL_EVENT_MOUSE_MOTION){
                 int x = event.motion.x;
                 int y = event.motion.y;
-                addStroke(x, y);
-                MakeOutline(renderer, outline, x, y);
-                
-            } 
-            if (event.type == SDL_EVENT_MOUSE_MOTION && !drawing && !show_menu){
-                int x = event.motion.x;
-                int y = event.motion.y;
-                MakeOutline(renderer, outline, x, y);
+
+                if (drawing) {
+                    addStroke(x, y);
+                    MakeOutline(renderer, outline, x, y); 
+                }
+
+                if (!drawing && !show_menu){
+                    MakeOutline(renderer, outline, x, y);
+                }
             }
 
-            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT && show_menu) {
-                int x = event.motion.x;
-                int y = event.motion.y;
+    if(event.type == SDL_EVENT_MOUSE_WHEEL){
+        if(event.wheel.y > 0) { // scroll up
+            camera.zoom+=ZOOMINTERVAL;
+        }
+        else if(event.wheel.y < 0) { // scroll down
+            if(camera.zoom>ZOOMINTERVAL+0.01){
+                camera.zoom-=ZOOMINTERVAL;
+            }
+        }
+        UPDATEZOOM = true;
+    }
 
-                if(resizeButton.mouseOverButton(x,y)) {
-                    std::cout<<"resizeButton is pressed :)"<<std::endl;
-                }
-                if(paint_brushButton.mouseOverButton(x,y)) {
-                    std::cout<<"paint_brushButton is pressed :)"<<std::endl;
-                }
-                if(bucketButton.mouseOverButton(x,y)) {
-                    std::cout<<"bucketButton is pressed :)"<<std::endl;
-                }
-                if(pencilButton.mouseOverButton(x,y)) {
-                    std::cout<<"pencilButton is pressed :)"<<std::endl;
-                }
-                if(spray_paintButton.mouseOverButton(x,y)) {
-                    std::cout<<"spray_paintButton is pressed :)"<<std::endl;
-                }
-                if(eraseButton.mouseOverButton(x,y)) {
-                    std::cout<<"eraseButton is pressed :)"<<std::endl;
-                }
-
-                for(int i = 0; i < TOTALTEXTS; i++){
-                    if(checkClick(x,y,dst[i])){
-                        if(i==0){std::cout<<"settings accessed"<<std::endl;}
-                        if(i==1){std::cout<<"hello world accessed"<<std::endl;}
-                        if(i==2){running = false;}
-                    }
-                }
-
-                }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
                 if (event.key.key == SDLK_TAB) {    // toggle menu
@@ -232,21 +272,19 @@ int main() {
 
         }
         
+        if (UPDATEZOOM){
+            UPDATEZOOM = false;
+            updateZoom();
+        }
 
         // Render to window
         SDL_SetRenderTarget(renderer, NULL);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
+        SDL_SetRenderDrawColor(renderer, 119, 76, 111, 255); // White background
         SDL_RenderClear(renderer);
         drawStroke(renderer,texture); // continuously renders only the last stroke
-        // Compute camera destination
-        SDL_FRect dest = {
-            -camera.offset.x * camera.zoom,
-            -camera.offset.y * camera.zoom,
-            CANVASWWIDTH * camera.zoom,
-            CANVASHEIGHT * camera.zoom
-        };
-        SDL_RenderTexture(renderer, texture, NULL, &dest);
-        SDL_RenderTexture(renderer, outline, NULL, &dest);
+
+        SDL_RenderTexture(renderer, texture, NULL, &CANVAS);
+        SDL_RenderTexture(renderer, outline, NULL, &CANVAS);
         
         // Draw menu if active
         if (show_menu) {
@@ -261,6 +299,8 @@ int main() {
                 SDL_RenderTexture(renderer, textTexture[i], NULL, &dst[i]);
             }
         }
+
+
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Cap at ~62 FPS
     }
