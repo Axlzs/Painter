@@ -7,6 +7,40 @@ enum class MouseType {
     CIRCLE
 };
 
+class Mouse {
+    private:
+
+        float x1; // previous x for moving 
+        float y1; // previous y for moving 
+        float x2;
+        float x2;
+
+        bool drawing = false;
+        bool erasing = false;
+        bool updateZoom = false;
+        bool moving = false;
+
+        int brushsize = 10;
+        int currentSize = 10;
+        int eraserSize = 20;
+        int strokesToRedo = 0;
+
+        SDL_Color brushColor = {255, 0, 0, 255};
+        SDL_Color CurrentColor = {255, 0, 0, 255};
+        SDL_Color red = {255, 0, 0, 255};
+        MouseType brushType = MouseType::RECT;
+    
+    public:
+    
+    void enableEraser(bool value);
+    void enableDrawing(bool value);
+    void enableZoom(bool value);
+    void enableMoving(bool value);
+
+    void changeBrushSize(int amount);
+    void changeBrushType(MouseType type);
+};
+
 extern MouseType BRUSHTYPE;
 
 void createStroke(int x, int y);

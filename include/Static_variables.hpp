@@ -16,17 +16,6 @@ bool running = true;
 bool UPDATEZOOM = false;
 bool moving = false;
 
-struct mouseState {
-    float x1; // previous x
-    float y1; // previous y
-    float x2;
-    float x2;
-
-    bool drawing = false;
-    bool updateZoom = false;
-    bool moving = false;
-};
-
 bool show_menu = false;  // menu toggle state
 SDL_Color BLACK = {0, 0, 0, 255};
 inline const char* BUTTON_LOCATION = "icons/buttons.png";

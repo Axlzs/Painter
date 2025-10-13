@@ -19,9 +19,64 @@ SDL_Color FONTCOLOR  = {0, 0, 0, 255};
 MouseType BRUSHTYPE = MouseType::RECT;
 /////////////////////BUTTONS/////////////////////
 
-
 int extern WINDOWWIDTH;
 int extern WINDOWHEIGHT;
+
+void Mouse::enableEraser(bool value) {
+    erasing = value;
+    if (erasing){
+        drawing = false;
+        updateZoom = false;
+        moving = false;
+
+        brushsize = currentSize;
+        currentSize = eraserSize;
+        CurrentColor = GLOBALBACKGROUND;
+    } else {
+        CurrentColor = brushColor;
+        currentSize = brushsize;
+    }
+}
+
+void Mouse::enableDrawing(bool value) {
+    drawing = value;
+    if (drawing){
+        erasing = false;
+        updateZoom = false;
+        moving = false;
+    }
+}
+
+void Mouse::enableZoom(bool value) {
+    updateZoom = value;
+    if (updateZoom){
+        erasing = false;
+        updateZoom = false;
+        moving = false;
+
+        //the code for zoom
+    }
+}
+
+void Mouse::enableMoving(bool value) {
+    moving = value;
+    if (moving){
+        erasing = false;
+        updateZoom = false;
+        drawing = false;
+
+        // the code for moving with mouse 
+    }
+}
+
+void Mouse::changeBrushSize(int amount) {
+    currentSize+=amount;
+    if(currentSize<=0){currentSize=1;}
+}
+
+void Mouse::changeBrushType(MouseType type){
+    brushType = type;
+}
 
 struct Stroke {
     std::vector<SDL_Point> points;
@@ -159,25 +214,4 @@ void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y){
     }
     SDL_SetRenderTarget(renderer, NULL); // deselects this layer 
     
-}
-
-void changeBrushSize(int x){
-    CURRENTSIZE+=x;
-    if(CURRENTSIZE<=0){CURRENTSIZE=1;}
-}
-
-void changeBrushType(MouseType type){
-    BRUSHTYPE = type;
-}
-
-void changeEraser(){
-    ERASERSTATE=!ERASERSTATE;
-    if(ERASERSTATE){
-        BRUSHSIZE = CURRENTSIZE;
-        CURRENTSIZE = ERASERSIZE;
-        CURRENTCOLOR = GLOBALBACKGROUND;
-    } else {
-        CURRENTCOLOR = BRUSHCOLOR;
-        CURRENTSIZE = BRUSHSIZE;
-    }
 }

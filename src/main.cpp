@@ -139,6 +139,7 @@ int main() {
 
     ///////////////////////////////////////////////
 
+    Mouse Mouse;
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
@@ -238,19 +239,21 @@ int main() {
                     show_menu = !show_menu;
                 }
                 if (event.key.key == SDLK_UP && !drawing) {     // increase brush size
-                    changeBrushSize(1);
+                    Mouse.changeBrushSize(1);
                 }
                 if (event.key.key == SDLK_DOWN && !drawing) {   // decrease brush size
-                    changeBrushSize(-1);
+                    Mouse.changeBrushSize(-1);
                 }
                 if (event.key.key == SDLK_C && !drawing) {      // set brush to circle
-                    changeBrushType(MouseType::CIRCLE);
+                    Mouse.enableEraser(false);
+                    Mouse.changeBrushType(MouseType::CIRCLE);
                 }
                 if (event.key.key == SDLK_R && !drawing) {      // set brush to rect
-                    changeBrushType(MouseType::RECT);
+                    Mouse.enableEraser(false);
+                    Mouse.changeBrushType(MouseType::RECT);
                 }
                 if (event.key.key == SDLK_E) { // eraser
-                    changeEraser();
+                    Mouse.enableEraser(true);
                 }
                 if ((event.key.key == SDLK_Z) && (event.key.mod == SDL_KMOD_LCTRL)){
                     SDL_SetRenderTarget(renderer, texture);
