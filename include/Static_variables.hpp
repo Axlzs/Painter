@@ -7,7 +7,8 @@ float WINDOWHEIGHT = 700;
 float CANVASWWIDTH = 3000;
 float CANVASHEIGHT = 3000;
 const float SCALE = 1.0f;
-float ZOOMINTERVAL = 0.01;
+float ZOOMIN = 1.1;
+float ZOOMOUT = 0.9;
 
 float prev_x = -1, prev_y = -1;
 int dx, dy;

@@ -223,12 +223,10 @@ int main() {
 
     if(event.type == SDL_EVENT_MOUSE_WHEEL){
         if(event.wheel.y > 0) { // scroll up
-            camera.zoom+=ZOOMINTERVAL;
+            camera.zoom=ZOOMIN;
         }
         else if(event.wheel.y < 0) { // scroll down
-            if(camera.zoom>ZOOMINTERVAL+0.01){
-                camera.zoom-=ZOOMINTERVAL;
-            }
+            camera.zoom=ZOOMOUT;
         }
         UPDATEZOOM = true;
     }
