@@ -2,21 +2,20 @@
 
 #include <cmath>
 #include "mouse.hpp"
-#include <vector>
 #include <iostream>
 
 /////////////////////BUTTONS/////////////////////
-bool ERASERSTATE = false;
-int BRUSHSIZE = 10;
-int CURRENTSIZE = 10;
-int ERASERSIZE = 20;
-int strokesToRedo = 0;
-SDL_Color BRUSHCOLOR = {255, 0, 0, 255};
-SDL_Color CURRENTCOLOR = {255, 0, 0, 255};
-SDL_Color RED = {255, 0, 0, 255};
+// bool ERASERSTATE = false;
+// int BRUSHSIZE = 10;
+// int CURRENTSIZE = 10;
+// int ERASERSIZE = 20;
+// int strokesToRedo = 0;
+// SDL_Color BRUSHCOLOR = {255, 0, 0, 255};
+// SDL_Color CURRENTCOLOR = {255, 0, 0, 255};
+// SDL_Color RED = {255, 0, 0, 255};
 SDL_Color GLOBALBACKGROUND = {255, 255, 255, 255};
-SDL_Color FONTCOLOR  = {0, 0, 0, 255};
-MouseType BRUSHTYPE = MouseType::RECT;
+// SDL_Color FONTCOLOR  = {0, 0, 0, 255};
+// MouseType BRUSHTYPE = MouseType::RECT;
 /////////////////////BUTTONS/////////////////////
 
 int extern WINDOWWIDTH;
@@ -31,9 +30,9 @@ void Mouse::enableEraser(bool value) {
 
         brushsize = currentSize;
         currentSize = eraserSize;
-        CurrentColor = GLOBALBACKGROUND;
+        currentColor = GLOBALBACKGROUND;
     } else {
-        CurrentColor = brushColor;
+        currentColor = brushColor;
         currentSize = brushsize;
     }
 }
@@ -84,16 +83,17 @@ struct Stroke {
     int brushSize;
     MouseType brushType;
 };
+
 std::vector<Stroke> AllStrokes;
 std::vector<Stroke> UndoStrokes;
 
 Stroke newStroke;
 
-void createStroke(int x, int y){
+void createStroke(int x, int y, SDL_Color currentcolor, int currentsize, MouseType brushtype, int strokesToRedo){
     newStroke = Stroke{};
-    newStroke.color = CURRENTCOLOR;
-    newStroke.brushSize = CURRENTSIZE;
-    newStroke.brushType = BRUSHTYPE;
+    newStroke.color = currentcolor;
+    newStroke.brushSize = currentsize;
+    newStroke.brushType = brushtype;
     newStroke.points.push_back({x, y});
     AllStrokes.push_back(newStroke);
     strokesToRedo=0;    
@@ -173,40 +173,39 @@ void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture){
     }
 }
 
-void undoStroke(){
+void undoStroke(int& strokestoredo){
     if (AllStrokes.size()>0){
         UndoStrokes.push_back(AllStrokes.back());
         AllStrokes.pop_back();
-        strokesToRedo = AllStrokes.size();
+        strokestoredo = AllStrokes.size();
     }
 }
-void redoStroke(){
+void redoStroke(int& strokestoredo){
     if (UndoStrokes.size()>0){
-        if(AllStrokes.size() == strokesToRedo){
+        if(AllStrokes.size() == strokestoredo){
             AllStrokes.push_back(UndoStrokes.back());
             UndoStrokes.pop_back();
-            strokesToRedo = AllStrokes.size();
+            strokestoredo = AllStrokes.size();
         } else {
             UndoStrokes.clear();
-            std::cout<<"undostroke cleared!!"<<std::endl;
         }
     }
 }
 
-void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y){
+void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int currentsize, MouseType brushtype){
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
     SDL_SetRenderTarget(renderer, texture); // selects the layer, the coursor is on
     SDL_SetRenderDrawColor(renderer, 0,0,0,0); // sets the color to invisible
     SDL_RenderClear(renderer); // immediately overlays the invisible color
     SDL_SetRenderDrawColor(renderer, 0,0,0,180);
-    if (BRUSHTYPE == MouseType::RECT) {
-        SDL_FRect rect = { (float)(x - CURRENTSIZE/2), (float)(y - CURRENTSIZE/2), (float)CURRENTSIZE, (float)CURRENTSIZE };
+    if (brushtype == MouseType::RECT) {
+        SDL_FRect rect = { (float)(x - currentsize/2), (float)(y - currentsize/2), (float)currentsize, (float)currentsize };
         SDL_RenderRect(renderer, &rect); // draws the textrue
-    } else if (BRUSHTYPE == MouseType::CIRCLE) {
-        for (int dy = -CURRENTSIZE/2; dy <= CURRENTSIZE/2; dy++) {
-            for (int dx = -CURRENTSIZE/2; dx <= CURRENTSIZE/2; dx++) {
-                if (dx*dx + dy*dy <= (CURRENTSIZE/2)*(CURRENTSIZE/2)&& dx*dx + dy*dy >=(CURRENTSIZE/2-1)*(CURRENTSIZE/2-1)) {
+    } else if (brushtype == MouseType::CIRCLE) {
+        for (int dy = -currentsize/2; dy <= currentsize/2; dy++) {
+            for (int dx = -currentsize/2; dx <= currentsize/2; dx++) {
+                if (dx*dx + dy*dy <= (currentsize/2)*(currentsize/2)&& dx*dx + dy*dy >=(currentsize/2-1)*(currentsize/2-1)) {
                     SDL_RenderPoint(renderer, x + dx, y + dy);
                 }
             }

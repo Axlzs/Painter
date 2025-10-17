@@ -139,7 +139,7 @@ int main() {
 
     ///////////////////////////////////////////////
 
-    Mouse Mouse;
+    Mouse Mouse; // creating an instance of mouse class
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
@@ -159,7 +159,7 @@ int main() {
                 if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
                     drawing = true;
                     SDL_SetRenderTarget(renderer, texture);
-                    createStroke(x,y);
+                    createStroke(x, y, Mouse.currentColor, Mouse.currentSize, Mouse.brushType, Mouse.strokesToRedo);
                 }
 
                 if (event.button.button == SDL_BUTTON_MIDDLE && !show_menu){
@@ -204,7 +204,7 @@ int main() {
                 drawing = false;
                 int x = event.motion.x;
                 int y = event.motion.y;
-                MakeOutline(renderer, outline, x, y);
+                MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType);
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION){
@@ -213,11 +213,11 @@ int main() {
 
                 if (drawing) {
                     addStroke(x, y);
-                    MakeOutline(renderer, outline, x, y); 
+                    MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType); 
                 }
 
                 if (!drawing && !show_menu){
-                    MakeOutline(renderer, outline, x, y);
+                    MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType);
                 }
             }
 
@@ -259,7 +259,7 @@ int main() {
                     SDL_SetRenderTarget(renderer, texture);
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderClear(renderer);
-                    undoStroke();
+                    undoStroke(Mouse.strokesToRedo);
                     reDrawStrokes(renderer,texture);
                     SDL_SetRenderTarget(renderer, NULL);
                 }
@@ -267,7 +267,7 @@ int main() {
                     SDL_SetRenderTarget(renderer, texture);
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderClear(renderer);
-                    redoStroke();
+                    redoStroke(Mouse.strokesToRedo);
                     reDrawStrokes(renderer,texture);
                     SDL_SetRenderTarget(renderer, NULL);
                 }
