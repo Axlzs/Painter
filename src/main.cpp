@@ -41,10 +41,8 @@ void updateZoom(){
 
 }
 void moveWindow(float x1, float y1, float x2, float y2){
-    dx = x2 - x1;
-    dy = y2 - y1;
-    CANVAS.x += dx;
-    CANVAS.y += dy;
+    CANVAS.x += x2 - x1; // x2-x1 = deltaX
+    CANVAS.y += y2 - y1; // y2-y1 = deltaY
 }
 
 int main() {
@@ -153,43 +151,43 @@ int main() {
             }
             
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-                int x = event.motion.x;
-                int y = event.motion.y;
+                Mouse.x2 = event.motion.x;
+                Mouse.y2 = event.motion.y;
 
                 if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
                     drawing = true;
                     SDL_SetRenderTarget(renderer, texture);
-                    createStroke(x, y, Mouse.currentColor, Mouse.currentSize, Mouse.brushType, Mouse.strokesToRedo);
+                    createStroke(Mouse.x2, Mouse.y2, Mouse.currentColor, Mouse.currentSize, Mouse.brushType, Mouse.strokesToRedo);
                 }
 
                 if (event.button.button == SDL_BUTTON_MIDDLE && !show_menu){
                     moving = true;
-                    prev_x = x;
-                    prev_y = y;
+                    Mouse.x1 = Mouse.x2;
+                    Mouse.y1 = Mouse.y2;
                 }
 
                 if (event.button.button == SDL_BUTTON_LEFT && show_menu){
-                    if(resizeButton.mouseOverButton(x,y)) {
+                    if(resizeButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"resizeButton is pressed :)"<<std::endl;
                     }
-                    if(paint_brushButton.mouseOverButton(x,y)) {
+                    if(paint_brushButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"paint_brushButton is pressed :)"<<std::endl;
                     }
-                    if(bucketButton.mouseOverButton(x,y)) {
+                    if(bucketButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"bucketButton is pressed :)"<<std::endl;
                     }
-                    if(pencilButton.mouseOverButton(x,y)) {
+                    if(pencilButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"pencilButton is pressed :)"<<std::endl;
                     }
-                    if(spray_paintButton.mouseOverButton(x,y)) {
+                    if(spray_paintButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"spray_paintButton is pressed :)"<<std::endl;
                     }
-                    if(eraseButton.mouseOverButton(x,y)) {
+                    if(eraseButton.mouseOverButton(Mouse.x2,Mouse.y2)) {
                         std::cout<<"eraseButton is pressed :)"<<std::endl;
                     }
 
                     for(int i = 0; i < TOTALTEXTS; i++){
-                        if(checkClick(x,y,dst[i])){
+                        if(checkClick(Mouse.x2,Mouse.y2,dst[i])){
                             if(i==0){std::cout<<"settings accessed"<<std::endl;}
                             if(i==1){std::cout<<"hello world accessed"<<std::endl;}
                             if(i==2){running = false;}
@@ -202,22 +200,22 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && 
                 event.button.button == SDL_BUTTON_LEFT) {
                 drawing = false;
-                int x = event.motion.x;
-                int y = event.motion.y;
-                MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType);
+                Mouse.x2 = event.motion.x;
+                Mouse.y2 = event.motion.y;
+                MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION){
-                int x = event.motion.x;
-                int y = event.motion.y;
+                Mouse.x2 = event.motion.x;
+                Mouse.y2 = event.motion.y;
 
                 if (drawing) {
-                    addStroke(x, y);
-                    MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType); 
+                    addStroke(Mouse.x2, Mouse.y2);
+                    MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType); 
                 }
 
                 if (!drawing && !show_menu){
-                    MakeOutline(renderer, outline, x, y, Mouse.currentSize, Mouse.brushType);
+                    MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
                 }
             }
 

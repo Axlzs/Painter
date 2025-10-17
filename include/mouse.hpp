@@ -11,8 +11,8 @@ enum class MouseType {
 class Mouse {
     public:
 
-        float x1; // previous x for moving 
-        float y1; // previous y for moving 
+        float x1 = -1; // previous x for moving 
+        float y1 = -1; // previous y for moving 
         float x2;
         float y2;
 
@@ -50,7 +50,7 @@ void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture);
 void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture);
 void undoStroke(int& strokestoredo);
 void redoStroke(int& strokestoredo);
-void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int currentsize, MouseType brushtype);
+void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, float x, float y, int currentsize, MouseType brushtype);
 void changeBrushSize(int x);
 void changeBrushType(MouseType type);
 void changeEraser();

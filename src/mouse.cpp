@@ -183,7 +183,7 @@ void redoStroke(int& strokestoredo){
     }
 }
 
-void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int currentsize, MouseType brushtype){
+void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, float x, float y, int currentsize, MouseType brushtype){
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
     SDL_SetRenderTarget(renderer, texture); // selects the layer, the coursor is on
@@ -191,7 +191,7 @@ void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, int x, int y, int
     SDL_RenderClear(renderer); // immediately overlays the invisible color
     SDL_SetRenderDrawColor(renderer, 0,0,0,180);
     if (brushtype == MouseType::RECT) {
-        SDL_FRect rect = { (float)(x - currentsize/2), (float)(y - currentsize/2), (float)currentsize, (float)currentsize };
+        SDL_FRect rect = { (x - currentsize/2), (y - currentsize/2), (float)currentsize, (float)currentsize };
         SDL_RenderRect(renderer, &rect); // draws the textrue
     } else if (brushtype == MouseType::CIRCLE) {
         for (int dy = -currentsize/2; dy <= currentsize/2; dy++) {

@@ -7,11 +7,10 @@ float WINDOWHEIGHT = 700;
 float CANVASWWIDTH = 3000;
 float CANVASHEIGHT = 3000;
 const float SCALE = 1.0f;
+//Camera zoom
 float ZOOMIN = 1.1;
 float ZOOMOUT = 0.9;
 
-float prev_x = -1, prev_y = -1;
-int dx, dy;
 bool drawing = false;
 bool running = true;
 bool UPDATEZOOM = false;
