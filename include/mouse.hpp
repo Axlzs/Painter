@@ -16,9 +16,13 @@ class Mouse {
         float x2;
         float y2;
 
+        float realx1 = -1;  // real mouse coordinates
+        float realy1 = -1;  // real mouse coordinates
+        float realx2;       // real mouse coordinates
+        float realy2;       // real mouse coordinates
+
         bool drawing = false;
         bool erasing = false;
-        bool updateZoom = false;
         bool moving = false;
 
         int brushsize = 10;
@@ -34,7 +38,7 @@ class Mouse {
     void enableEraser(bool value);
     void enableDrawing(bool value);
     void enableZoom(bool value);
-    void enableMoving(bool value);
+    void moveWindow(SDL_FRect& canvas);
 
     void changeBrushSize(int amount);
     void changeBrushType(MouseType type);

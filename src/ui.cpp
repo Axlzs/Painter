@@ -7,24 +7,10 @@ void Camera::updateZoom(SDL_FRect& canvas){
     canvas.w*=zoom;
     canvas.h*=zoom;
 
-    // if (zoom > 1){
-    //     if (totalZoom >=1){
-    //         totalZoom*=zoom;
-    //     } else {
-    //         totalZoom = 1;
-    //         totalZoom*=zoom;
-    //     }
-    // }
-    // if (zoom < 1){
-    //     if (totalZoom <=1){
-    //         totalZoom*=zoom;
-    //     } else {
-    //         totalZoom = 1;
-    //         totalZoom*=zoom;
-    //     }
-    // }
     totalZoom*=zoom;
 }
+
+
 
 
 Button::Button(const std::string& type, int x, int y, SDL_Texture* spritesheet)

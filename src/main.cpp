@@ -129,8 +129,13 @@ int main() {
             }
             
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-                Mouse.x2 = event.motion.x/camera.totalZoom;
-                Mouse.y2 = event.motion.y/camera.totalZoom;
+                Mouse.realx2 = event.motion.x;
+                Mouse.realy2 = event.motion.y;
+                
+                Mouse.x2 = (Mouse.realx2/camera.totalZoom)-CANVAS.x;
+                Mouse.y2 = (Mouse.realy2/camera.totalZoom)-CANVAS.y;
+                
+            
 
                 if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
                     drawing = true;
@@ -140,8 +145,8 @@ int main() {
 
                 if (event.button.button == SDL_BUTTON_MIDDLE && !show_menu){
                     moving = true;
-                    Mouse.x1 = Mouse.x2;
-                    Mouse.y1 = Mouse.y2;
+                    Mouse.realx1 = Mouse.realx2;
+                    Mouse.realy1 = Mouse.realy2;
                 }
 
                 if (event.button.button == SDL_BUTTON_LEFT && show_menu){
@@ -175,17 +180,22 @@ int main() {
 
             }
 
-            if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && 
-                event.button.button == SDL_BUTTON_LEFT) {
-                drawing = false;
-                Mouse.x2 = event.motion.x/camera.totalZoom;
-                Mouse.y2 = event.motion.y/camera.totalZoom;
-                MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+                if (event.button.button == SDL_BUTTON_LEFT){
+                    drawing = false;
+                    Mouse.x2 = (event.motion.x/camera.totalZoom)-CANVAS.x;
+                    Mouse.y2 = (event.motion.y/camera.totalZoom)-CANVAS.y;
+                    MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
+                }
+                if (event.button.button == SDL_BUTTON_MIDDLE){
+                    moving = false;
+                }
+
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION){
-                Mouse.x2 = event.motion.x/camera.totalZoom;
-                Mouse.y2 = event.motion.y/camera.totalZoom;
+                Mouse.x2 = (event.motion.x/camera.totalZoom)-CANVAS.x;
+                Mouse.y2 = (event.motion.y/camera.totalZoom)-CANVAS.y;
 
                 if (drawing) {
                     addStroke(Mouse.x2, Mouse.y2);
@@ -252,7 +262,9 @@ int main() {
         if (UPDATEZOOM){
             UPDATEZOOM = false;
             camera.updateZoom(CANVAS);
-            std::cout<<"current Zoom:"<<camera.totalZoom<<std::endl;
+        }
+        if (moving){
+            Mouse.moveWindow(CANVAS);
         }
 
         // Render to window

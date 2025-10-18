@@ -16,7 +16,6 @@ void Mouse::enableEraser(bool value) {
     erasing = value;
     if (erasing){
         drawing = false;
-        updateZoom = false;
         moving = false;
 
         brushsize = currentSize;
@@ -32,31 +31,22 @@ void Mouse::enableDrawing(bool value) {
     drawing = value;
     if (drawing){
         erasing = false;
-        updateZoom = false;
         moving = false;
     }
 }
 
-void Mouse::enableZoom(bool value) {
-    updateZoom = value;
-    if (updateZoom){
-        erasing = false;
-        updateZoom = false;
-        moving = false;
+void Mouse::moveWindow(SDL_FRect& canvas) {
+    erasing = false;
+    drawing = false;
+    realx2 = x2 + canvas.x;
+    realy2 = y2 + canvas.y;
 
-        //the code for zoom
+    if(realx1 != -1 && realy1 != 0){
+        canvas.x += realx2 - realx1; // x2-x1 = deltaX
+        canvas.y += realy2 - realy1; // y2-y1 = deltaY
     }
-}
-
-void Mouse::enableMoving(bool value) {
-    moving = value;
-    if (moving){
-        erasing = false;
-        updateZoom = false;
-        drawing = false;
-
-        // the code for moving with mouse 
-    }
+    realx1=realx2;
+    realy1=realy2;
 }
 
 void Mouse::changeBrushSize(int amount) {

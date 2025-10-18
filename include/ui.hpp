@@ -32,6 +32,7 @@ public:
 
 
     void updateZoom(SDL_FRect& canvas);
+    void moveWindow(SDL_FRect& canvas, float x1, float y1, float x2, float y2);
 };
 
 
