@@ -38,15 +38,13 @@ void Mouse::enableDrawing(bool value) {
 void Mouse::moveWindow(SDL_FRect& canvas) {
     erasing = false;
     drawing = false;
-    realx2 = x2 + canvas.x;
-    realy2 = y2 + canvas.y;
+    //realx2 = x2 + canvas.x;
+    //realy2 = y2 + canvas.y;
 
     if(realx1 != -1 && realy1 != 0){
         canvas.x += realx2 - realx1; // x2-x1 = deltaX
         canvas.y += realy2 - realy1; // y2-y1 = deltaY
     }
-    realx1=realx2;
-    realy1=realy2;
 }
 
 void Mouse::changeBrushSize(int amount) {

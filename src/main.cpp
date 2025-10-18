@@ -132,8 +132,8 @@ int main() {
                 Mouse.realx2 = event.motion.x;
                 Mouse.realy2 = event.motion.y;
                 
-                Mouse.x2 = (Mouse.realx2/camera.totalZoom)-CANVAS.x;
-                Mouse.y2 = (Mouse.realy2/camera.totalZoom)-CANVAS.y;
+                Mouse.x2 = (Mouse.realx2-CANVAS.x)/camera.totalZoom;
+                Mouse.y2 = (Mouse.realy2-CANVAS.y)/camera.totalZoom;
                 
             
 
@@ -183,8 +183,8 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
                 if (event.button.button == SDL_BUTTON_LEFT){
                     drawing = false;
-                    Mouse.x2 = (event.motion.x/camera.totalZoom)-CANVAS.x;
-                    Mouse.y2 = (event.motion.y/camera.totalZoom)-CANVAS.y;
+                    Mouse.x2 = (event.motion.x-CANVAS.x)/camera.totalZoom;
+                    Mouse.y2 = (event.motion.y-CANVAS.y)/camera.totalZoom;
                     MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
                 }
                 if (event.button.button == SDL_BUTTON_MIDDLE){
@@ -194,8 +194,11 @@ int main() {
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION){
-                Mouse.x2 = (event.motion.x/camera.totalZoom)-CANVAS.x;
-                Mouse.y2 = (event.motion.y/camera.totalZoom)-CANVAS.y;
+                Mouse.realx2 = event.motion.x;
+                Mouse.realy2 = event.motion.y;
+                
+                Mouse.x2 = (Mouse.realx2-CANVAS.x)/camera.totalZoom;
+                Mouse.y2 = (Mouse.realy2-CANVAS.y)/camera.totalZoom;
 
                 if (drawing) {
                     addStroke(Mouse.x2, Mouse.y2);
@@ -204,6 +207,12 @@ int main() {
 
                 if (!drawing && !show_menu){
                     MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
+                }
+
+                if (moving){
+                    Mouse.moveWindow(CANVAS);
+                    Mouse.realx1 = Mouse.realx2;
+                    Mouse.realy1 = Mouse.realy2;
                 }
             }
 
@@ -263,9 +272,9 @@ int main() {
             UPDATEZOOM = false;
             camera.updateZoom(CANVAS);
         }
-        if (moving){
-            Mouse.moveWindow(CANVAS);
-        }
+        // if (moving){
+        //     Mouse.moveWindow(CANVAS);
+        // }
 
         // Render to window
         SDL_SetRenderTarget(renderer, NULL);
