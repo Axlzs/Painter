@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 
+
 struct Buttons {
     int x;
     int y;
@@ -21,6 +22,17 @@ inline const std::unordered_map<std::string, Buttons> buttonData = {
     {"erase",        {256,  64,     64,    2}}
 };
 
+class Camera{
+public:
+    SDL_FPoint offset = {0,0};
+    float zoom = 1;
+    float zoomin = 1.1;
+    float zoomout = 0.9;
+    float totalZoom = 1;
+
+
+    void updateZoom(SDL_FRect& canvas);
+};
 
 
 class Button {

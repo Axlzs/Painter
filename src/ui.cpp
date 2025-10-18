@@ -1,6 +1,32 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include "ui.hpp"
 
+void Camera::updateZoom(SDL_FRect& canvas){
+    canvas.x*=zoom;
+    canvas.y*=zoom;
+    canvas.w*=zoom;
+    canvas.h*=zoom;
+
+    // if (zoom > 1){
+    //     if (totalZoom >=1){
+    //         totalZoom*=zoom;
+    //     } else {
+    //         totalZoom = 1;
+    //         totalZoom*=zoom;
+    //     }
+    // }
+    // if (zoom < 1){
+    //     if (totalZoom <=1){
+    //         totalZoom*=zoom;
+    //     } else {
+    //         totalZoom = 1;
+    //         totalZoom*=zoom;
+    //     }
+    // }
+    totalZoom*=zoom;
+}
+
+
 Button::Button(const std::string& type, int x, int y, SDL_Texture* spritesheet)
     : buttonInfo(buttonData.at(type)), uiTexture(spritesheet){
     srcRect = { (float)buttonInfo.x, (float)buttonInfo.y, (float)buttonInfo.size, (float)buttonInfo.size };

@@ -2,48 +2,13 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include "Static_variables.hpp"
+#include "ui.hpp"
 #include "mouse.hpp"
 #include "canvas.hpp"
-#include "ui.hpp"
 #include <bits/stdc++.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 
-struct camera{
-    SDL_FPoint offset = {0,0};
-    float zoom = 1;
-}camera;
-
-SDL_FRect WINDOW = {
-    camera.offset.x,
-    camera.offset.y,
-    WINDOWWIDTH,
-    WINDOWHEIGHT
-};
-
-SDL_FRect CANVAS = {
-    camera.offset.x,
-    camera.offset.y,
-    CANVASWWIDTH,
-    CANVASHEIGHT
-};
-void updateZoom(){
-
-    WINDOW.x*=camera.zoom;
-    WINDOW.y*=camera.zoom;
-    WINDOW.w*=camera.zoom;
-    WINDOW.h*=camera.zoom;
-
-    CANVAS.x*=camera.zoom;
-    CANVAS.y*=camera.zoom;
-    CANVAS.w*=camera.zoom;
-    CANVAS.h*=camera.zoom;
-
-}
-void moveWindow(float x1, float y1, float x2, float y2){
-    CANVAS.x += x2 - x1; // x2-x1 = deltaX
-    CANVAS.y += y2 - y1; // y2-y1 = deltaY
-}
 
 int main() {
     SDL_Window *window;
@@ -58,6 +23,21 @@ int main() {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
+
+    Camera camera;
+    SDL_FRect WINDOW = {
+        camera.offset.x,
+        camera.offset.y,
+        WINDOWWIDTH,
+        WINDOWHEIGHT
+    };
+
+    SDL_FRect CANVAS = {
+        camera.offset.x,
+        camera.offset.y,
+        CANVASWWIDTH,
+        CANVASHEIGHT
+    };
 
     window = SDL_CreateWindow("Painter", WINDOW.w, WINDOW.h, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, NULL);
@@ -105,8 +85,6 @@ int main() {
         SDL_Log("Couldn't open font: %s\n", SDL_GetError());
         return SDL_APP_FAILURE;
     }
-
-    
     
     /* Assign text to surface*/
     text[0] = TTF_RenderText_Blended(font, "Settings", 0, BLACK);
@@ -151,8 +129,8 @@ int main() {
             }
             
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-                Mouse.x2 = event.motion.x;
-                Mouse.y2 = event.motion.y;
+                Mouse.x2 = event.motion.x/camera.totalZoom;
+                Mouse.y2 = event.motion.y/camera.totalZoom;
 
                 if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
                     drawing = true;
@@ -200,14 +178,14 @@ int main() {
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP && 
                 event.button.button == SDL_BUTTON_LEFT) {
                 drawing = false;
-                Mouse.x2 = event.motion.x;
-                Mouse.y2 = event.motion.y;
+                Mouse.x2 = event.motion.x/camera.totalZoom;
+                Mouse.y2 = event.motion.y/camera.totalZoom;
                 MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
             }
 
             if (event.type == SDL_EVENT_MOUSE_MOTION){
-                Mouse.x2 = event.motion.x;
-                Mouse.y2 = event.motion.y;
+                Mouse.x2 = event.motion.x/camera.totalZoom;
+                Mouse.y2 = event.motion.y/camera.totalZoom;
 
                 if (drawing) {
                     addStroke(Mouse.x2, Mouse.y2);
@@ -221,10 +199,10 @@ int main() {
 
     if(event.type == SDL_EVENT_MOUSE_WHEEL){
         if(event.wheel.y > 0) { // scroll up
-            camera.zoom=ZOOMIN;
+            camera.zoom=camera.zoomin;
         }
         else if(event.wheel.y < 0) { // scroll down
-            camera.zoom=ZOOMOUT;
+            camera.zoom=camera.zoomout;
         }
         UPDATEZOOM = true;
     }
@@ -273,12 +251,13 @@ int main() {
         
         if (UPDATEZOOM){
             UPDATEZOOM = false;
-            updateZoom();
+            camera.updateZoom(CANVAS);
+            std::cout<<"current Zoom:"<<camera.totalZoom<<std::endl;
         }
 
         // Render to window
         SDL_SetRenderTarget(renderer, NULL);
-        SDL_SetRenderDrawColor(renderer, 119, 76, 111, 255); // White background
+        SDL_SetRenderDrawColor(renderer, 119, 76, 111, 255); // background
         SDL_RenderClear(renderer);
         drawStroke(renderer,texture); // continuously renders only the last stroke
 
