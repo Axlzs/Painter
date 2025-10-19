@@ -92,11 +92,8 @@ void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color c
         SDL_RenderFillRect(renderer, &rect);
     } else if (type == MouseType::CIRCLE) {
         for (int dy = -brushsize/2; dy <= brushsize/2; dy++) {
-            for (int dx = -brushsize/2; dx <= brushsize/2; dx++) {
-                if (dx*dx + dy*dy <= (brushsize/2)*(brushsize/2)) {
-                    SDL_RenderPoint(renderer, x + dx, y + dy);
-                }
-            }
+            int dx = (int)sqrt(brushsize/2 * brushsize/2 - dy * dy);  // half-width of this scanline
+            SDL_RenderLine(renderer, x - dx, y + dy, x + dx, y + dy);
         }
     }
 }
@@ -182,13 +179,28 @@ void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, float x, float y,
         SDL_FRect rect = { (x - currentsize/2), (y - currentsize/2), (float)currentsize, (float)currentsize };
         SDL_RenderRect(renderer, &rect); // draws the textrue
     } else if (brushtype == MouseType::CIRCLE) {
-        for (int dy = -currentsize/2; dy <= currentsize/2; dy++) {
-            for (int dx = -currentsize/2; dx <= currentsize/2; dx++) {
-                if (dx*dx + dy*dy <= (currentsize/2)*(currentsize/2)&& dx*dx + dy*dy >=(currentsize/2-1)*(currentsize/2-1)) {
-                    SDL_RenderPoint(renderer, x + dx, y + dy);
-                }
-            }
+    int plusx = currentsize/2;
+    int plusy = 0;
+    int err = 1 - plusx;
+
+    while (plusx >= plusy) {
+        SDL_RenderPoint(renderer, x + plusx, y + plusy);
+        SDL_RenderPoint(renderer, x + plusy, y + plusx);
+        SDL_RenderPoint(renderer, x - plusy, y + plusx);
+        SDL_RenderPoint(renderer, x - plusx, y + plusy);
+        SDL_RenderPoint(renderer, x - plusx, y - plusy);
+        SDL_RenderPoint(renderer, x - plusy, y - plusx);
+        SDL_RenderPoint(renderer, x + plusy, y - plusx);
+        SDL_RenderPoint(renderer, x + plusx, y - plusy);
+
+        plusy++;
+        if (err < 0)
+            err += 2 * plusy + 1;
+        else {
+            plusx--;
+            err += 2 * (plusy - plusx + 1);
         }
+    }
     }
     SDL_SetRenderTarget(renderer, NULL); // deselects this layer 
     

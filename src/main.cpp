@@ -201,12 +201,7 @@ int main() {
                 Mouse.y2 = (Mouse.realy2-CANVAS.y)/camera.totalZoom;
 
                 if (drawing) {
-                    addStroke(Mouse.x2, Mouse.y2);
-                    MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType); 
-                }
-
-                if (!drawing && !show_menu){
-                    MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
+                    addStroke(Mouse.x2, Mouse.y2); 
                 }
 
                 if (moving){
@@ -233,6 +228,7 @@ int main() {
                 }
                 if (event.key.key == SDLK_UP && !drawing) {     // increase brush size
                     Mouse.changeBrushSize(1);
+                    std::cout<<Mouse.currentSize<<std::endl;
                 }
                 if (event.key.key == SDLK_DOWN && !drawing) {   // decrease brush size
                     Mouse.changeBrushSize(-1);
@@ -272,16 +268,16 @@ int main() {
             UPDATEZOOM = false;
             camera.updateZoom(CANVAS);
         }
-        // if (moving){
-        //     Mouse.moveWindow(CANVAS);
-        // }
-
+        
         // Render to window
         SDL_SetRenderTarget(renderer, NULL);
         SDL_SetRenderDrawColor(renderer, 119, 76, 111, 255); // background
         SDL_RenderClear(renderer);
-        drawStroke(renderer,texture); // continuously renders only the last stroke
-
+        MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
+        if (drawing){
+            drawStroke(renderer,texture); // continuously renders only the last stroke 
+        }
+            
         SDL_RenderTexture(renderer, texture, NULL, &CANVAS);
         SDL_RenderTexture(renderer, outline, NULL, &CANVAS);
         
