@@ -38,6 +38,4 @@ Fix:
     [-] Check makeOutline for useless render calls
 
 Optimizations:
-    - previous BresenhalmActivate interpolation function set render target on every pixel(called SDL_SetRenderTarget(renderer, texture);)
-    + now it's set only once per stroke 
-    
+    - render only the last point instead of the last stroke

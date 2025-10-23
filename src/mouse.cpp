@@ -123,11 +123,9 @@ void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture){
         SDL_SetRenderTarget(renderer, texture);
         auto last_stroke = AllStrokes.back();
         SDL_Point prev = last_stroke.points[0];
-        if(last_stroke.points.size()>1){
-            for (auto i = 1; i < last_stroke.points.size(); i++){
-                BresenhalmActivate(renderer, prev.x, prev.y, last_stroke.points[i].x, last_stroke.points[i].y, last_stroke.brushType, last_stroke.color, last_stroke.brushSize);
-                prev = last_stroke.points[i];
-            }
+        if(last_stroke.points.size()>1 && last_stroke.points.size()>1<3){
+            prev = last_stroke.points[last_stroke.points.size() - 2];
+            BresenhalmActivate(renderer, prev.x, prev.y, last_stroke.points.back().x, last_stroke.points.back().y, last_stroke.brushType, last_stroke.color, last_stroke.brushSize);
         } else {
                 DrawBrush(renderer, prev.x, prev.y, last_stroke.brushType, last_stroke.color, last_stroke.brushSize);
         }

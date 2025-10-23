@@ -202,6 +202,7 @@ int main() {
 
                 if (drawing) {
                     addStroke(Mouse.x2, Mouse.y2); 
+                    drawStroke(renderer,texture);
                 }
 
                 if (moving){
@@ -274,10 +275,10 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 119, 76, 111, 255); // background
         SDL_RenderClear(renderer);
         MakeOutline(renderer, outline, Mouse.x2, Mouse.y2, Mouse.currentSize, Mouse.brushType);
-        if (drawing){
-            drawStroke(renderer,texture); // continuously renders only the last stroke 
-        }
-            
+        // if (drawing){
+        //     drawStroke(renderer,texture);
+        // }
+
         SDL_RenderTexture(renderer, texture, NULL, &CANVAS);
         SDL_RenderTexture(renderer, outline, NULL, &CANVAS);
         

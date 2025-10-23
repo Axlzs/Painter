@@ -10,9 +10,6 @@ void Camera::updateZoom(SDL_FRect& canvas){
     totalZoom*=zoom;
 }
 
-
-
-
 Button::Button(const std::string& type, int x, int y, SDL_Texture* spritesheet)
     : buttonInfo(buttonData.at(type)), uiTexture(spritesheet){
     srcRect = { (float)buttonInfo.x, (float)buttonInfo.y, (float)buttonInfo.size, (float)buttonInfo.size };
