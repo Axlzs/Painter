@@ -140,7 +140,7 @@ int main() {
                 if (event.button.button == SDL_BUTTON_LEFT && !show_menu){
                     drawing = true;
                     SDL_SetRenderTarget(renderer, texture);
-                    createStroke(Mouse.x2, Mouse.y2, Mouse.currentColor, Mouse.currentSize, Mouse.brushType, Mouse.strokesToRedo);
+                    createStroke(Mouse.x2, Mouse.y2, Mouse.currentColor, Mouse.currentSize, Mouse.brushType);
                 }
 
                 if (event.button.button == SDL_BUTTON_MIDDLE && !show_menu){
@@ -249,7 +249,7 @@ int main() {
                     SDL_SetRenderTarget(renderer, texture);
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderClear(renderer);
-                    undoStroke(Mouse.strokesToRedo);
+                    undoStroke();
                     reDrawStrokes(renderer,texture);
                     SDL_SetRenderTarget(renderer, NULL);
                 }
@@ -257,7 +257,7 @@ int main() {
                     SDL_SetRenderTarget(renderer, texture);
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderClear(renderer);
-                    redoStroke(Mouse.strokesToRedo);
+                    redoStroke();
                     reDrawStrokes(renderer,texture);
                     SDL_SetRenderTarget(renderer, NULL);
                 }

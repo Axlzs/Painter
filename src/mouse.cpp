@@ -68,20 +68,19 @@ std::vector<Stroke> UndoStrokes;
 
 Stroke newStroke;
 
-void createStroke(int x, int y, SDL_Color currentcolor, int currentsize, MouseType brushtype, int strokesToRedo){
+void createStroke(int x, int y, SDL_Color currentcolor, int currentsize, MouseType brushtype){
     newStroke = Stroke{};
     newStroke.color = currentcolor;
     newStroke.brushSize = currentsize;
     newStroke.brushType = brushtype;
     newStroke.points.push_back({x, y});
-    AllStrokes.push_back(newStroke);
-    strokesToRedo=0;    
+    AllStrokes.push_back(newStroke);  
 }
 
 void addStroke(int x, int y){
     newStroke.points.push_back({x, y});
     AllStrokes.back().points.push_back({x, y});
-    
+    UndoStrokes.clear();
 }
 
 void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color color, int brushsize) {
@@ -147,22 +146,16 @@ void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture){
     }
 }
 
-void undoStroke(int& strokestoredo){
-    if (AllStrokes.size()>0){
+void undoStroke(){
+    if (!AllStrokes.empty()) {
         UndoStrokes.push_back(AllStrokes.back());
         AllStrokes.pop_back();
-        strokestoredo = AllStrokes.size();
     }
 }
-void redoStroke(int& strokestoredo){
-    if (UndoStrokes.size()>0){
-        if(AllStrokes.size() == strokestoredo){
-            AllStrokes.push_back(UndoStrokes.back());
-            UndoStrokes.pop_back();
-            strokestoredo = AllStrokes.size();
-        } else {
-            UndoStrokes.clear();
-        }
+void redoStroke(){
+    if (!UndoStrokes.empty()) {
+        AllStrokes.push_back(UndoStrokes.back());
+        UndoStrokes.pop_back();
     }
 }
 

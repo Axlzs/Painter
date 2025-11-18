@@ -28,7 +28,6 @@ class Mouse {
         int brushsize = 10;
         int currentSize = 10;
         int eraserSize = 20;
-        int strokesToRedo = 0;
 
         SDL_Color brushColor = {255, 0, 0, 255};
         SDL_Color currentColor = {255, 0, 0, 255};
@@ -46,14 +45,14 @@ class Mouse {
 
 extern MouseType BRUSHTYPE;
 
-void createStroke(int x, int y, SDL_Color currentcolor, int currentsize, MouseType brushtype, int strokestoredo);
+void createStroke(int x, int y, SDL_Color currentcolor, int currentsize, MouseType brushtype);
 void addStroke(int x, int y);
 void DrawBrush(SDL_Renderer *renderer, int x, int y, MouseType type, SDL_Color color, int brushsize);
 void BresenhalmActivate(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, MouseType type, SDL_Color color, int brushsize);
 void drawStroke(SDL_Renderer* renderer, SDL_Texture* texture);
 void reDrawStrokes(SDL_Renderer* renderer, SDL_Texture* texture);
-void undoStroke(int& strokestoredo);
-void redoStroke(int& strokestoredo);
+void undoStroke();
+void redoStroke();
 void MakeOutline(SDL_Renderer *renderer, SDL_Texture *texture, float x, float y, int currentsize, MouseType brushtype);
 void changeBrushSize(int x);
 void changeBrushType(MouseType type);
